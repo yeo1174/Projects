@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Library — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    --page-plane: #ffffff;
+    --surface-1: #f6f4ef;
+    --surface-2: #efece4;
+    --text-primary: #17160f;
+    --text-secondary: #55534a;
+    --text-muted: #97948a;
+    --gridline: #e4e0d6;
+    --border: rgba(23,22,15,0.10);
+    --shadow: rgba(23,22,15,0.06);
+    --shadow-lift: rgba(23,22,15,0.10);
+    --accent: var(--s1);
+    --accent-hover: #365cd1;
+    --accent-ink: #ffffff;
+    --accent-soft: #eef2fb;
+    --accent-soft-line: #d8e2f5;
+    --s1: #123fc9;
+    --s2: #b26a00;
+    --s3: #007a4d;
+    --s4: #d63f0c;
+    --s5: #6b4fa0;
+    --s6: #1f7a5c;
+    --s7: #2d5a8a;
+    --s8: #58799e;
+    --s9: #9e5f2d;
+    --s10: #8a8a3d;
+    --s11: #3d7d9e;
+    --s12: #6e5a8a;
+    color-scheme: light;
+    font-family: "Libre Franklin", system-ui, sans-serif;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background-color .25s ease, color .25s ease;
+  }
+  body[data-theme="dark"] {
+    --page-plane: #0d0d0b;
+    --surface-1: #171714;
+    --surface-2: #21211c;
+    --text-primary: #f7f6f2;
+    --text-secondary: #b6b3a8;
+    --text-muted: #7c7a70;
+    --gridline: #2b2b25;
+    --border: rgba(255,255,255,0.09);
+    --shadow: rgba(0,0,0,0.4);
+    --shadow-lift: rgba(0,0,0,0.55);
+    --accent-hover: #a9c4ff;
+    --accent-ink: #0e1418;
+    --accent-soft: #1d2836;
+    --accent-soft-line: #2c3d52;
+    --s1: #7ea8ff;
+    --s2: #ecb43a;
+    --s3: #24c48d;
+    --s4: #ff8a52;
+    --s5: #a88dff;
+    --s6: #3dd9a8;
+    --s7: #6ea8e0;
+    --s8: #8db0d0;
+    --s9: #d9a05b;
+    --s10: #c4c46a;
+    --s11: #6db8e0;
+    --s12: #9d8ad9;
+    color-scheme: dark;
+  }
+  a { color: var(--s1); text-decoration: none; }
+  a:hover { color: var(--text-primary); text-decoration: underline; }
+  * { box-sizing: border-box; }
+
+  .wrap { min-height: 100%; background-image: radial-gradient(120% 60% at 100% 0%, var(--surface-2) 0%, transparent 55%); padding: 64px 32px 80px; }
+  .inner { max-width: 1180px; margin: 0 auto; }
+
+  header.top {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap;
+    padding-bottom: 30px; border-bottom: 1px solid var(--text-primary);
+  }
+  header.top .kicker {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted);
+    margin: 0 0 14px;
+  }
+  header.top .kicker::before { content: ''; width: 22px; height: 1px; background: var(--text-muted); display: block; }
+  header.top h1 { font-size: 44px; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.035em; line-height: 1.02; }
+  header.top .sub { font-size: 14.5px; color: var(--text-secondary); margin: 0; max-width: 52ch; line-height: 1.55; text-wrap: pretty; }
+  header.top .side { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+  .theme-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 9px 16px; border-radius: 100px; cursor: pointer;
+    transition: color .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .theme-btn:hover { color: var(--text-primary); border-color: var(--text-muted); box-shadow: 0 2px 10px var(--shadow); }
+  .theme-btn i { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); display: block; font-style: normal; }
+  .side .nav-link { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.04em; }
+  .back-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+    color: var(--accent-ink); border: 1px solid var(--accent); background: var(--accent);
+    padding: 7px 14px; border-radius: 100px; white-space: nowrap;
+    margin-bottom: 20px;
+    transition: color .18s ease, border-color .18s ease, background-color .18s ease, transform .18s ease, box-shadow .18s ease;
+  }
+  .back-pill:hover {
+    color: var(--accent-ink); border-color: var(--accent-hover); background: var(--accent-hover);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--shadow-lift);
+  }
+  .back-pill:active { transform: translateY(0); box-shadow: 0 1px 3px var(--shadow); }
+  .back-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .side .gen-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em; }
+
+  .stat-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px;
+    background: var(--gridline); border: 1px solid var(--gridline); border-radius: 14px; overflow: hidden;
+    margin: 40px 0 60px; box-shadow: 0 1px 3px var(--shadow);
+  }
+  .stat-tile { background: var(--surface-1); padding: 22px 24px 20px; transition: background-color .18s ease; }
+  .stat-tile:hover { background: var(--surface-2); }
+  .stat-tile .num { font-size: 34px; font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; line-height: 1; }
+  .stat-tile .lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 10px; }
+  .stat-tile .sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+  section.block { margin-bottom: 56px; }
+  .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .section-head .idx { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.08em; }
+  .section-head .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .section-head .t { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+  .section-head .line { flex: 1; height: 1px; background: var(--gridline); min-width: 20px; }
+  .section-head .meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); white-space: nowrap; letter-spacing: 0.04em; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px 20px; cursor: pointer; text-align: left; font-family: inherit; color: inherit;
+    transition: background-color .18s ease, box-shadow .18s ease, border-color .18s ease;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .card:hover { background: var(--surface-2); box-shadow: 0 2px 10px var(--shadow-lift); border-color: var(--gridline); }
+  .card.active { outline: 2px solid var(--accent, var(--s1)); outline-offset: -1px; }
+  .card .card-top { display: flex; align-items: center; gap: 10px; }
+  .card .card-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--accent, var(--s1)); }
+  .card .cname { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+  .card .cbadge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .card .cmeta {
+    display: flex; justify-content: space-between; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted);
+    border-top: 1px solid var(--gridline); padding-top: 10px;
+  }
+
+  .chart-box { background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px; padding: 24px 24px 12px; box-shadow: 0 1px 3px var(--shadow); }
+  .bar-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; position: relative; cursor: pointer; }
+  .bar-label { width: 260px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .bar-track { flex: 1; background: var(--gridline); border-radius: 3px; height: 14px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; min-width: 4px; }
+  .bar-count { width: 44px; text-align: right; flex-shrink: 0; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--text-secondary); font-family: 'IBM Plex Mono', monospace; }
+  .bar-row:hover .bar-track { outline: 1px solid var(--border); }
+  .bar-tooltip {
+    position: absolute; left: 272px; top: -28px; z-index: 5;
+    background: var(--text-primary); color: var(--page-plane);
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; padding: 4px 9px; border-radius: 6px;
+    white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .1s;
+  }
+  .bar-row:hover .bar-tooltip { opacity: 1; }
+
+  .controls { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+  .controls input[type="search"] {
+    flex: 1; min-width: 200px; padding: 9px 14px; border-radius: 100px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+    font-family: inherit; font-size: 13.5px; outline: none;
+    transition: border-color .15s ease;
+  }
+  .controls input[type="search"]:focus { border-color: var(--text-muted); }
+  .controls select {
+    padding: 9px 12px; border-radius: 100px; border: 1px solid var(--border);
+    background: var(--surface-1); color: var(--text-primary); font-family: inherit; font-size: 13px; outline: none;
+  }
+  .controls .clear-btn {
+    padding: 9px 16px; border-radius: 100px; border: 1px solid var(--border);
+    background: var(--surface-1); color: var(--text-secondary); cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .controls .clear-btn:hover { color: var(--text-primary); border-color: var(--text-muted); }
+  .result-count { color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; margin-bottom: 10px; }
+
+  .table-wrap {
+    border: 1px solid var(--border); border-radius: 14px; overflow: auto; max-height: 640px;
+    background: var(--surface-1); box-shadow: 0 1px 3px var(--shadow);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    position: sticky; top: 0; background: var(--surface-1); text-align: left;
+    padding: 12px 16px; border-bottom: 1px solid var(--gridline);
+    color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; white-space: nowrap; user-select: none;
+  }
+  thead th:hover { color: var(--text-primary); }
+  thead th .sort-arrow { opacity: 0.45; font-size: 0.7em; }
+  thead th.sorted .sort-arrow { opacity: 1; color: var(--text-primary); }
+  tbody td { padding: 10px 16px; border-bottom: 1px solid var(--gridline); vertical-align: top; }
+  tbody tr:hover { background: var(--surface-2); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+  .cat-cell { display: flex; align-items: center; white-space: nowrap; font-weight: 600; font-size: 12.5px; }
+  .doc-name { font-weight: 600; color: var(--text-primary); }
+  .doc-tags { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 100px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.04em;
+  }
+  .tag-trigger { background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--gridline); }
+  .tag-verified { background: rgba(36,196,141,0.14); color: var(--s3); }
+  .tag-source { background: rgba(18,63,201,0.10); color: var(--s1); }
+  .size-cell { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-secondary); white-space: nowrap; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .empty-state { padding: 48px; text-align: center; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+
+  footer.foot { margin-top: 16px; font-size: 11.5px; color: var(--text-muted); border-top: 1px solid var(--gridline); padding-top: 22px; line-height: 1.65; max-width: 88ch; font-family: 'IBM Plex Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="inner">
+
+  <a class="back-pill" href="https://yeo1174.github.io/Projects/">&larr; Project Dashboard</a>
+
+  <header class="top">
+    <div>
+      <p class="kicker">Knowledge Library &nbsp;·&nbsp; SKY Architects</p>
+      <h1>Knowledge Library</h1>
+      <p class="sub">Architectural &amp; regulatory reference — Malaysian building standards, contracts, circulars, and guidelines.</p>
+    </div>
+    <div class="side">
+      <button type="button" class="theme-btn" id="themeBtn"><i></i><span id="themeLabel">Dark</span></button>
+      <a class="nav-link" href="bubbles.html">Knowledge Map</a>
+      <span class="gen-date">Generated 2026-09-11</span>
+    </div>
+  </header>
+
+  <div class="stat-row" id="statRow"></div>
+
+  <section class="block">
+    <div class="section-head">
+      <span class="idx">01</span>
+      <span class="dot" style="background: var(--s1);"></span>
+      <span class="t">Categories</span>
+      <span class="line"></span>
+      <span class="meta">click to filter</span>
+    </div>
+    <div class="cards" id="cardGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <span class="idx">02</span>
+      <span class="dot" style="background: var(--s2);"></span>
+      <span class="t">All documents</span>
+      <span class="line"></span>
+      <span class="meta">searchable &amp; sortable</span>
+    </div>
+    <div class="controls">
+      <input type="search" id="searchBox" placeholder="Search documents, e.g. balustrade, PAM, MS 832, UBBL" autocomplete="off">
+      <select id="subFilter"><option value="">All subfolders</option></select>
+      <button class="clear-btn" id="clearBtn">Clear filters</button>
+    </div>
+    <div class="result-count" id="resultCount"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="category">Category <span class="sort-arrow"></span></th>
+            <th data-sort="sub">Subfolder <span class="sort-arrow"></span></th>
+            <th data-sort="name">Document <span class="sort-arrow"></span></th>
+            <th data-sort="size" style="text-align:right;">Size <span class="sort-arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <span class="idx">03</span>
+      <span class="dot" style="background: var(--s3);"></span>
+      <span class="t">Documents per category</span>
+      <span class="line"></span>
+      <span class="meta" id="chartMeta"></span>
+    </div>
+    <div class="chart-box">
+      <div id="barChart"></div>
+    </div>
+  </section>
+
+  <footer class="foot">Knowledge Library — SKY Architects &nbsp;·&nbsp; Internal reference &nbsp;·&nbsp; Generated 2026-09-11</footer>
+</div>
+</div>
+
+<script>
+const SECTIONS = [{"title":"Design Checklists","badge":"SDPB/PDI Best Practices","dir":"checklist","colorVar":"--s1","docs":[{"display":"CCC tracking checklist","trigger":"kl-ccc","subdir":"","verified":null,"sourcePdf":true,"size":3048},{"display":"GQuaS guidebook 6th edition 2024","trigger":"kl-checklist","subdir":"","verified":"2026-07-16","sourcePdf":true,"size":16740},{"display":"sdpb industrial building design checklist","trigger":"kl-checklist","subdir":"","verified":null,"sourcePdf":true,"size":5379},{"display":"sdpb integrated building design checklist","trigger":"kl-checklist","subdir":"","verified":null,"sourcePdf":true,"size":6474},{"display":"sdpb landed building design checklist","trigger":"kl-checklist","subdir":"","verified":null,"sourcePdf":true,"size":4128}]},{"title":"UBBL","badge":"Uniform Building By-Laws","dir":"UBBL","colorVar":"--s2","docs":[{"display":"fire services act 1988 fire certificate","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":10030},{"display":"form f1 partial CCC","trigger":"kl-form-f1","subdir":"","verified":null,"sourcePdf":true,"size":2331},{"display":"guide fire protection malaysia","trigger":"kl-gfp","subdir":"","verified":null,"sourcePdf":true,"size":10963},{"display":"hose reel installation height","trigger":"","subdir":"fire-safety","verified":null,"sourcePdf":false,"size":1110},{"display":"UBBL 2021","trigger":"kl-ubbl","subdir":"","verified":"2026-08-07","sourcePdf":true,"size":225501}]},{"title":"SPA","badge":"Sale & Purchase Agreement","dir":"SPA","colorVar":"--s3","docs":[{"display":"SPA Schedule G","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":719},{"display":"SPA Schedule H","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":708}]},{"title":"Contracts","badge":"PAM Contract Suite","dir":"contracts","colorVar":"--s4","docs":[{"display":"pam2006","trigger":"","subdir":"","verified":null,"sourcePdf":false,"size":9819},{"display":"pam2006 amendments rev7","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":5258},{"display":"pam2018","trigger":"kl-pam","subdir":"","verified":"2026-05-16","sourcePdf":false,"size":41448}]},{"title":"Appointment / TOR","badge":"Terms of Reference","dir":"Appointment","colorVar":"--s5","docs":[{"display":"sime darby ToR architect 2024","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":5155}]},{"title":"LAM & PAM Practice Notes","badge":"Lembaga Arkitek Malaysia","dir":"LAM","colorVar":"--s6","docs":[{"display":"General Circular No 1 Form G8 Fire Safety","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":1006},{"display":"General Circular No 2 Form G10 Mechanical Ventilation","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":1035},{"display":"LAM GC 1 2008 CCC","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":779},{"display":"LAM GC 1 2024 Architect Fees Stakeholder","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":934},{"display":"LAM GC 2 2010 Form F1","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":904},{"display":"LAM GC 2 2017 HDA Stage Claim","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":13683},{"display":"LAM GC 4 2023 CPD Guidelines","trigger":"","subdir":"circulars","verified":null,"sourcePdf":true,"size":1009},{"display":"LAM Superstructure Stage","trigger":"","subdir":"circulars","verified":"2026-08-24","sourcePdf":true,"size":5377},{"display":"PAM Practice Note PN 2025 1 PCWD","trigger":"","subdir":"pam","verified":null,"sourcePdf":true,"size":7653},{"display":"PN 2026 1 shop drawings","trigger":"kl-pn-shop-drawings","subdir":"pam","verified":"2026-04-28","sourcePdf":true,"size":6094},{"display":"pn2023 3 the arch resp setting out","trigger":"kl-pn-settingout","subdir":"pam","verified":null,"sourcePdf":true,"size":6211},{"display":"pn2024 3 retention under contracts 2006 2018r","trigger":"kl-pn-retention","subdir":"pam","verified":null,"sourcePdf":true,"size":6727},{"display":"pn2025 1 PCWD role summary","trigger":"","subdir":"pam","verified":null,"sourcePdf":false,"size":2542},{"display":"pn2025 2 planning statutory append abc","trigger":"kl-pn-planning","subdir":"pam","verified":null,"sourcePdf":true,"size":6485},{"display":"pn2026 2 cessation of practice","trigger":"kl-pn-cessation","subdir":"pam","verified":null,"sourcePdf":true,"size":5682},{"display":"pn2026 3 limitation periods","trigger":"kl-pn-limitation","subdir":"pam","verified":null,"sourcePdf":true,"size":8411},{"display":"pn2026 6 contract completion part2","trigger":"kl-pn-completion","subdir":"pam","verified":null,"sourcePdf":true,"size":9203},{"display":"pn2026 9 cost escalation in contracts","trigger":"","subdir":"pam","verified":"2026-05-06","sourcePdf":true,"size":6611}]},{"title":"Codes","badge":"Malaysian Standards","dir":"codes","colorVar":"--s7","docs":[{"display":"CIS 10 2020 SHASSIC","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":3796},{"display":"CIS 7 2021 QLASSIC","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":3127},{"display":"MS 1017 2022 aluminium framed glass sliding doors","trigger":"kl-ms1017","subdir":"","verified":"2026-05-16","sourcePdf":true,"size":8727},{"display":"MS 1183 2015 fire safety","trigger":"kl-ms1183","subdir":"","verified":"2026-05-16","sourcePdf":true,"size":9894},{"display":"MS 1184 2014 Universal Design","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":3561},{"display":"MS 1539 part3 2003 portable fire extinguisher","trigger":"","subdir":"","verified":null,"sourcePdf":false,"size":5631},{"display":"MS 1553 2002 wind loading","trigger":"kl-ms1553","subdir":"","verified":"2026-05-16","sourcePdf":true,"size":12456},{"display":"MS 1780 smoke control","trigger":"kl-ms1780","subdir":"","verified":"2026-09-10","sourcePdf":true,"size":20108},{"display":"MS 2680 2017 energy efficiency residential","trigger":"kl-ms2680","subdir":"","verified":"2026-05-16","sourcePdf":true,"size":12676},{"display":"MS 832 2022 aluminium alloy windows","trigger":"kl-ms832","subdir":"","verified":"2026-05-16","sourcePdf":true,"size":10680}]},{"title":"Guidelines","badge":"Regulatory & Technical","dir":"guidelines","colorVar":"--s8","docs":[{"display":"Dasar Rumah Selangorku 3.0","trigger":"","subdir":"selangor","verified":null,"sourcePdf":true,"size":8020},{"display":"DBKL gp4 carpark guidelines 2018","trigger":"kl-dbkl-carpark","subdir":"kuala-lumpur","verified":null,"sourcePdf":true,"size":8646},{"display":"DBKL GPP akses oku v2 2024","trigger":"kl-dbkl-oku","subdir":"kuala-lumpur","verified":null,"sourcePdf":true,"size":9256},{"display":"DBKL GPP tlk wpkl 2024","trigger":"kl-dbkl-tlk","subdir":"kuala-lumpur","verified":null,"sourcePdf":true,"size":8948},{"display":"GPP EVCB 2023","trigger":"kl-evcb","subdir":"","verified":null,"sourcePdf":true,"size":11968},{"display":"GPP pangsapuri servis DBKL 2020","trigger":"kl-kl","subdir":"kuala-lumpur","verified":null,"sourcePdf":true,"size":6879},{"display":"greenre res scorecard v3.3","trigger":"kl-greenre","subdir":"green-re","verified":null,"sourcePdf":true,"size":2593},{"display":"JPBD Commercial Planning Guidelines","trigger":"","subdir":"selangor","verified":null,"sourcePdf":true,"size":23941},{"display":"JPBD GFA Definition","trigger":"","subdir":"selangor","verified":null,"sourcePdf":false,"size":2016},{"display":"JPBD Housing Guidelines","trigger":"","subdir":"selangor","verified":null,"sourcePdf":true,"size":25291},{"display":"JPBD Industrial Guidelines","trigger":"kl-industrial","subdir":"selangor","verified":"2026-06-05","sourcePdf":true,"size":13403},{"display":"MSMA chapter 4 roof drainage","trigger":"kl-msma","subdir":"","verified":null,"sourcePdf":false,"size":7234},{"display":"Rumah Selangorku Harapan Guidelines","trigger":"","subdir":"selangor","verified":null,"sourcePdf":true,"size":9589},{"display":"strata share unit calculation","trigger":"kl-shareunit","subdir":"","verified":"2026-08-12","sourcePdf":false,"size":9592}]},{"title":"Regulations","badge":"DOSH & Statutory","dir":"regulations","colorVar":"--s9","docs":[{"display":"act133 street drainage building 1974","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":4699},{"display":"act172 town country planning 1976","trigger":"kl-act172","subdir":"","verified":null,"sourcePdf":true,"size":12982},{"display":"DOSH MyKKP PEMTK","trigger":"kl-dosh","subdir":"","verified":null,"sourcePdf":false,"size":4577},{"display":"HIRARC 2008","trigger":"kl-hirarc","subdir":"","verified":null,"sourcePdf":true,"size":9294},{"display":"OSH construction design management 2024","trigger":"kl-osh","subdir":"","verified":null,"sourcePdf":true,"size":5338}]},{"title":"Materials","badge":"Product Data & Specifications","dir":"materials","colorVar":"--s10","docs":[{"display":"SikaWall 603 acrylic","trigger":"kl-materials","subdir":"","verified":null,"sourcePdf":false,"size":5251},{"display":"SPC","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":17036},{"display":"SPC installation","trigger":"","subdir":"","verified":null,"sourcePdf":false,"size":8759},{"display":"tile slip resistance standards","trigger":"","subdir":"","verified":null,"sourcePdf":false,"size":8177},{"display":"YTL Cement QuickMix Product Catalog","trigger":"","subdir":"","verified":null,"sourcePdf":true,"size":1733}]},{"title":"Utilities","badge":"TNB & Infrastructure","dir":"utilities","colorVar":"--s11","docs":[{"display":"SPAN UTG 2018","trigger":"kl-span","subdir":"","verified":null,"sourcePdf":true,"size":5060},{"display":"ST domestic wiring guidelines 2024","trigger":"kl-electrical","subdir":"","verified":null,"sourcePdf":true,"size":7012}]},{"title":"Specifications","badge":"M&E Specifications","dir":"spec","colorVar":"--s12","docs":[{"display":"approved me vendor list","trigger":"kl-spec","subdir":"","verified":null,"sourcePdf":true,"size":8604}]}];
+
+// ---- helpers ----
+const catColor = key => {
+  const c = SECTIONS.find(s => s.title === key);
+  if (!c) return 'var(--text-muted)';
+  return getComputedStyle(document.documentElement).getPropertyValue(c.colorVar).trim() || '#97948a';
+};
+const catShort = key => key;
+
+function fmtSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/(1024*1024)).toFixed(1) + ' MB';
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ---- theme toggle ----
+const themeBtn = document.getElementById('themeBtn');
+const themeLabel = document.getElementById('themeLabel');
+function setTheme(t) {
+  document.body.setAttribute('data-theme', t);
+  themeLabel.textContent = t === 'dark' ? 'Light' : 'Dark';
+  try { localStorage.setItem('kl-theme', t); } catch (e) {}
+}
+let savedTheme = 'light';
+try { savedTheme = localStorage.getItem('kl-theme') || 'light'; } catch (e) {}
+setTheme(savedTheme);
+themeBtn.addEventListener('click', () => {
+  setTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+const FILES = [];
+SECTIONS.forEach(s => s.docs.forEach(d => FILES.push({
+  category: s.title, sub: d.subdir, name: d.display,
+  trigger: d.trigger, verified: d.verified, sourcePdf: d.sourcePdf, size: d.size,
+})));
+
+// ---- stat tiles ----
+const totalFiles = FILES.length;
+const totalSize = FILES.reduce((a,f) => a + f.size, 0);
+const totalCats = SECTIONS.length;
+const totalSubs = new Set(FILES.filter(f=>f.sub).map(f => f.category + '/' + f.sub)).size;
+const triggerCount = FILES.filter(f => f.trigger).length;
+const verifiedCount = FILES.filter(f => f.verified).length;
+const sourcePdfCount = FILES.filter(f => f.sourcePdf).length;
+
+document.getElementById('statRow').innerHTML = [
+  [totalFiles, 'Documents', 'across ' + totalCats + ' sections'],
+  [fmtSize(totalSize), 'Total size', 'markdown sources'],
+  [totalCats, 'Categories', 'sections'],
+  [totalSubs, 'Subfolders', 'grouped docs'],
+  [triggerCount, 'Quick lookups', 'kl-* triggers'],
+  [sourcePdfCount, 'Source PDFs', 'linked & traceable'],
+].map(t => '<div class="stat-tile"><div class="num">' + t[0] + '</div><div class="lbl">' + t[1] + '</div><div class="sub">' + t[2] + '</div></div>').join('');
+
+// ---- category cards ----
+let activeCat = '';
+let activeSub = '';
+
+function catCounts() {
+  const m = {};
+  SECTIONS.forEach(s => m[s.title] = { count: 0, size: 0 });
+  FILES.forEach(f => { if (m[f.category]) { m[f.category].count++; m[f.category].size += f.size; } });
+  return m;
+}
+
+function renderCards() {
+  const counts = catCounts();
+  const grid = document.getElementById('cardGrid');
+  grid.innerHTML = SECTIONS.map(s =>
+    '<button class="card ' + (activeCat===s.title?'active':'') + '" style="--accent:var(' + s.colorVar + ')" data-cat="' + esc(s.title) + '">' +
+      '<div class="card-top"><span class="card-dot"></span><div><div class="cname">' + esc(s.title) + '</div><div class="cbadge">' + esc(s.badge) + '</div></div></div>' +
+      '<div class="cmeta"><span>' + counts[s.title].count + ' files</span><span>' + fmtSize(counts[s.title].size) + '</span></div>' +
+    '</button>'
+  ).join('');
+  grid.querySelectorAll('.card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCat = (activeCat === btn.dataset.cat) ? '' : btn.dataset.cat;
+      activeSub = '';
+      syncAndRender();
+    });
+  });
+}
+
+// ---- bar chart ----
+function renderChart() {
+  const counts = catCounts();
+  const max = Math.max(...SECTIONS.map(s => counts[s.title].count));
+  const box = document.getElementById('barChart');
+  box.innerHTML = SECTIONS.map(s => {
+    const cnt = counts[s.title].count;
+    const pct = max ? (cnt / max * 100) : 0;
+    return '<div class="bar-row" data-cat="' + esc(s.title) + '">' +
+        '<div class="bar-label"><span class="bar-dot" style="background:var(' + s.colorVar + ');"></span>' + esc(s.title) + '</div>' +
+        '<div class="bar-track">' +
+          '<div class="bar-fill" style="width:' + pct + '%; background:var(' + s.colorVar + ');"></div>' +
+          '<div class="bar-tooltip">' + cnt + ' files · ' + fmtSize(counts[s.title].size) + '</div>' +
+        '</div>' +
+        '<div class="bar-count">' + cnt + '</div>' +
+      '</div>';
+  }).join('');
+  box.querySelectorAll('.bar-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', () => {
+      const cat = row.dataset.cat;
+      activeCat = (activeCat === cat) ? '' : cat;
+      activeSub = '';
+      syncAndRender();
+    });
+  });
+}
+
+// ---- subfolder filter options ----
+function renderSubOptions() {
+  const sel = document.getElementById('subFilter');
+  const prev = activeSub;
+  const pool = activeCat ? FILES.filter(f => f.category === activeCat) : FILES;
+  const subs = Array.from(new Set(pool.filter(f=>f.sub).map(f=>f.sub))).sort();
+  sel.innerHTML = '<option value="">All subfolders</option>' + subs.map(s => '<option value="' + esc(s) + '">' + esc(s) + '</option>').join('');
+  sel.value = subs.includes(prev) ? prev : '';
+  activeSub = sel.value;
+}
+
+// ---- table ----
+let sortKey = 'category', sortDir = 1;
+
+function currentRows() {
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  let rows = FILES.filter(f => {
+    if (activeCat && f.category !== activeCat) return false;
+    if (activeSub && f.sub !== activeSub) return false;
+    if (q) {
+      const hay = (f.category + ' ' + f.sub + ' ' + f.name + ' ' + f.trigger).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  rows.sort((a,b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (typeof av === 'string') { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+    if (av < bv) return -1*sortDir;
+    if (av > bv) return 1*sortDir;
+    return 0;
+  });
+  return rows;
+}
+
+function renderTable() {
+  const rows = currentRows();
+  document.getElementById('resultCount').textContent = rows.length + ' of ' + FILES.length + ' documents';
+  const tbody = document.getElementById('tbody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state">No documents match these filters.</div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(f => {
+    const tags = [];
+    if (f.trigger) tags.push('<span class="tag tag-trigger">' + esc(f.trigger) + '</span>');
+    if (f.verified) tags.push('<span class="tag tag-verified">Verified ' + esc(f.verified) + '</span>');
+    if (f.sourcePdf) tags.push('<span class="tag tag-source">Source PDF</span>');
+    return '<tr>' +
+        '<td><div class="cat-cell"><span class="dot" style="background:' + catColor(f.category) + '"></span>' + esc(catShort(f.category)) + '</div></td>' +
+        '<td>' + (f.sub ? esc(f.sub) : '—') + '</td>' +
+        '<td><div class="doc-name">' + esc(f.name) + '</div>' + (tags.length ? '<div class="doc-tags">' + tags.join('') + '</div>' : '') + '</td>' +
+        '<td class="size-cell">' + fmtSize(f.size) + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function syncAndRender() {
+  renderCards();
+  renderChart();
+  renderSubOptions();
+  renderTable();
+  updateSortHeaders();
+}
+
+// ---- sorting ----
+function updateSortHeaders() {
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.sort === sortKey);
+    th.querySelector('.sort-arrow').textContent = th.dataset.sort === sortKey ? (sortDir === 1 ? ' ▲' : ' ▼') : '';
+  });
+}
+document.querySelectorAll('thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    if (sortKey === k) { sortDir = -sortDir; } else { sortKey = k; sortDir = 1; }
+    renderTable();
+    updateSortHeaders();
+  });
+});
+
+// ---- controls ----
+document.getElementById('searchBox').addEventListener('input', renderTable);
+document.getElementById('subFilter').addEventListener('change', e => {
+  activeSub = e.target.value;
+  renderTable();
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('searchBox').value = '';
+  activeCat = '';
+  activeSub = '';
+  syncAndRender();
+});
+
+syncAndRender();
+</script>
+</body>
+</html>
