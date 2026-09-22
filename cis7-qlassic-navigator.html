@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CIS 7:2021 QLASSIC Navigator — Annex A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   QLASSIC Navigator — same shell as the UBBL Navigator (content-index dashboard look)
+   (matches zig-bill1_content_index.html / content-index-dashboard.css):
+   - flat cream page (#F9F8F6), low-contrast cream surfaces
+   - Libre Franklin UI + IBM Plex Mono labels/numbers (no serif)
+   - pill controls, rounded cards, mono uppercase meta
+   - per-part accent colors (--s1..--s12, like section colors)
+   - light/dark via html[data-theme], stored under "qlassic-theme"
+   Skeleton, CSS and app JS inherited from the UBBL Navigator template
+   (regenerate with scripts/generate-qlassic-navigator.cjs).
+   ============================================================ */
+
+:root{
+  --page-plane:#F9F8F6;
+  --surface-1:#F7F5F0;
+  --surface-2:#F2EFE9;
+  --surface-3:#ECE8E0;
+  --text-primary:#17160f;
+  --text-secondary:#55534a;
+  --text-muted:#97948a;
+  --gridline:#E0E0E0;
+  --hairline:#CCCCCC;
+  --border:rgba(23,22,15,0.12);
+  --shadow:rgba(23,22,15,0.06);
+  --shadow-lift:rgba(23,22,15,0.10);
+  --mark:#F6D98A;
+  --s1:#0052CC;
+  --s2:#b26a00;
+  --s3:#007a4d;
+  --s4:#FF6B35;
+  --s5:#6b4fa0;
+  --s6:#1f7a5c;
+  --s7:#2d5a8a;
+  --s8:#58799e;
+  --s9:#9e5f2d;
+  --s10:#8a8a3d;
+  --s11:#3d7d9e;
+  --s12:#6e5a8a;
+  --accent:var(--s1);
+  --accent-hover:#266CD4;
+  --accent-ink:#ffffff;
+  --accent-soft:#EEF2FB;
+  --accent-soft-line:#D8E2F5;
+  --amend:var(--s2);
+  --amend-soft:#F8EBD6;
+  --danger:#A83A55;
+  --danger-soft:#F7E4E8;
+  --focus:var(--s1);
+  --radius-s:8px;
+  --radius-m:12px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page-plane:#0d0d0b;
+    --surface-1:#171714;
+    --surface-2:#1b1b17;
+    --surface-3:#21211c;
+    --text-primary:#f7f6f2;
+    --text-secondary:#b6b3a8;
+    --text-muted:#7c7a70;
+    --gridline:#2b2b25;
+    --hairline:#3a3a32;
+    --border:rgba(255,255,255,0.09);
+    --shadow:rgba(0,0,0,0.4);
+    --shadow-lift:rgba(0,0,0,0.55);
+    --mark:rgba(246,217,138,0.32);
+    --s1:#7ea8ff;
+    --s2:#ecb43a;
+    --s3:#24c48d;
+    --s4:#ff9a6e;
+    --s5:#a88dff;
+    --s6:#3dd9a8;
+    --s7:#6ea8e0;
+    --s8:#8db0d0;
+    --s9:#d9a05b;
+    --s10:#c4c46a;
+    --s11:#6db8e0;
+    --s12:#9d8ad9;
+    --accent:var(--s1);
+    --accent-hover:#a9c4ff;
+    --accent-ink:#0e1418;
+    --accent-soft:#1d2836;
+    --accent-soft-line:#2c3d52;
+    --amend-soft:#332a1c;
+    --danger:#ff8aa5;
+    --danger-soft:#3a2620;
+    --focus:var(--s1);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page-plane:#0d0d0b;
+  --surface-1:#171714;
+  --surface-2:#1b1b17;
+  --surface-3:#21211c;
+  --text-primary:#f7f6f2;
+  --text-secondary:#b6b3a8;
+  --text-muted:#7c7a70;
+  --gridline:#2b2b25;
+  --hairline:#3a3a32;
+  --border:rgba(255,255,255,0.09);
+  --shadow:rgba(0,0,0,0.4);
+  --shadow-lift:rgba(0,0,0,0.55);
+  --mark:rgba(246,217,138,0.32);
+  --s1:#7ea8ff;
+  --s2:#ecb43a;
+  --s3:#24c48d;
+  --s4:#ff9a6e;
+  --s5:#a88dff;
+  --s6:#3dd9a8;
+  --s7:#6ea8e0;
+  --s8:#8db0d0;
+  --s9:#d9a05b;
+  --s10:#c4c46a;
+  --s11:#6db8e0;
+  --s12:#9d8ad9;
+  --accent:var(--s1);
+  --accent-hover:#a9c4ff;
+  --accent-ink:#0e1418;
+  --accent-soft:#1d2836;
+  --accent-soft-line:#2c3d52;
+  --amend-soft:#332a1c;
+  --danger:#ff8aa5;
+  --danger-soft:#3a2620;
+  --focus:var(--s1);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+html, body{overflow-x:hidden;}
+body{
+  margin:0;
+  background:var(--page-plane);
+  color:var(--text-primary);
+  font-family:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  transition:background-color .25s ease,color .25s ease;
+}
+::selection{background:var(--mark);}
+a{color:var(--accent);}
+button, input{ font-family:inherit; }
+button{cursor:pointer;}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+::placeholder{color:var(--text-muted);}
+
+.num, .roman, .n, .badge, .pill, .figure, .cap, .lbl, .count, .rnum, .rpart, .crumb, .mark, .amendTag, .gen-mono{font-family:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace; font-variant-numeric:tabular-nums;}
+
+/* ---------- Shell ---------- */
+.shell{
+  display:grid;
+  grid-template-rows:auto 1fr;
+  height:100vh;
+  height:100dvh;
+}
+
+/* ---------- Document header (zig content-index format) ---------- */
+.top{position:relative;background:var(--page-plane);}
+.head-inner{
+  max-width:1180px;
+  margin:0 auto;
+  padding:36px 24px 24px;
+  border-bottom:1px solid var(--hairline);
+}
+.head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:36px;}
+.head-main{flex:1;min-width:0;}
+header .kicker{
+  display:flex;align-items:center;gap:10px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:500;
+  letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);
+  margin:0 0 12px;
+}
+header .kicker::before{content:'';width:26px;height:1px;background:var(--text-muted);display:block;}
+header h1{
+  font-family:'Libre Franklin',system-ui,sans-serif;
+  font-size:40px;font-weight:800;
+  letter-spacing:-0.03em;line-height:1.04;
+  margin:0 0 12px;text-wrap:balance;
+}
+header .sub{
+  font-size:14px;color:var(--text-secondary);
+  margin:0;max-width:64ch;line-height:1.6;text-wrap:pretty;
+}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-top:2px;}
+.theme-btn{
+  display:inline-flex;align-items:center;gap:9px;
+  border:1px solid var(--gridline);background:var(--surface-1);color:var(--text-secondary);
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
+  padding:9px 16px;border-radius:100px;cursor:pointer;white-space:nowrap;
+  transition:color .15s ease,border-color .15s ease,box-shadow .15s ease;
+}
+.theme-btn svg{width:13px;height:13px;display:block;}
+.theme-btn:hover{color:var(--text-primary);border-color:var(--text-muted);box-shadow:0 2px 10px var(--shadow);}
+.gen-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:0.04em;text-align:right;}
+.back-link{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  text-decoration:none;padding:7px 14px;border-radius:100px;white-space:nowrap;
+  margin-bottom:18px;
+  transition:color .18s ease,border-color .18s ease,background-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.back-link:hover{
+  color:var(--accent-ink);border-color:var(--accent-hover);background:var(--accent-hover);
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px var(--shadow-lift);
+}
+.back-link:active{transform:translateY(0);box-shadow:0 1px 3px var(--shadow);}
+.back-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* ---------- search / controls row (zig pills, below header) ---------- */
+.search-row{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  max-width:1180px;width:100%;margin:18px auto 0;padding:0 24px;
+}
+.searchwrap{position:relative;flex:1;min-width:240px;}
+.searchwrap svg{
+  position:absolute; left:13px; top:50%; transform:translateY(-50%);
+  width:15px; height:15px; color:var(--text-muted); pointer-events:none;
+}
+#searchInput{
+  width:100%;
+  font-family:inherit;font-size:13.5px;
+  padding:10px 40px 10px 36px;
+  border:1px solid var(--gridline);
+  border-radius:100px;
+  background:var(--surface-1);color:var(--text-primary);outline:none;
+  transition:border-color .15s ease;
+}
+#searchInput:focus{border-color:var(--text-muted);}
+#searchClear{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  border:none;background:transparent;color:var(--text-muted);
+  font-size:17px;line-height:1;padding:4px 8px;cursor:pointer;border-radius:50%;display:none;
+}
+#searchClear:hover{color:var(--text-primary);background:var(--accent-soft);}
+.jumpform{display:flex;align-items:stretch;}
+.jumpform label{display:none;}
+#jumpInput{
+  width:150px;
+  padding:10px 14px;
+  border:1px solid var(--gridline);
+  border-right:none;
+  border-radius:100px 0 0 100px;
+  background:var(--surface-1);
+  color:var(--text-primary);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;
+  outline:none;
+}
+#jumpInput:focus{border-color:var(--text-muted);}
+#jumpGo{
+  padding:10px 18px;
+  border:1px solid var(--accent);
+  border-radius:0 100px 100px 0;
+  background:var(--accent);
+  color:var(--accent-ink);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+#jumpGo:hover{filter:brightness(1.08);}
+
+/* ---------- Body layout (same 1180px column as header) ---------- */
+.body{
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr);
+  max-width:1180px;
+  width:100%;
+  margin:0 auto;
+  min-height:0;
+}
+.sidebarScrim{
+  display:none; position:fixed; inset:0; z-index:19;
+  background:rgba(10,12,15,.35);
+}
+@media (max-width:860px){
+  .menuBtn{display:inline-flex !important; position:absolute; top:14px; left:14px;}
+  .head-inner{padding:58px 16px 0;}
+  .head-row{flex-direction:column;gap:14px;}
+  header h1{font-size:30px;}
+  .side{flex-direction:row;justify-content:space-between;align-items:center;width:100%;padding-top:0;}
+  .gen-date{text-align:left;}
+  .search-row{margin-top:16px;padding:0 16px;}
+  .jumpform{width:100%;}
+  #jumpInput{flex:1;width:auto;min-width:0;}
+  .body{grid-template-columns:1fr;}
+  .sidebar{
+    position:fixed; inset:0 20% 0 0; z-index:20;
+    transform:translateX(-101%);
+    transition:transform .18s ease;
+    box-shadow:var(--shadow);
+    border-right:1px solid var(--gridline);
+    background:var(--page-plane);
+  }
+  .sidebar.open{transform:translateX(0);}
+  .sidebarScrim.show{display:block;}
+  .main{padding:22px 16px 60px;}
+  .clauseHead h2{font-size:20px;}
+  .navFoot button{max-width:48%;}
+}
+
+/* ---------- Sidebar / part index ---------- */
+.sidebar{
+  border-right:1px solid var(--gridline);
+  background:var(--page-plane);
+  overflow-y:auto;
+  min-height:0;
+  padding:6px 0 40px;
+}
+.sideSection{ margin-top:4px; }
+.sideSectionTitle{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px 7px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  position:sticky; top:0;
+  background:var(--page-plane);
+  z-index:2;
+}
+.sideSectionTitle::after{content:'';height:1px;flex:1;background:var(--gridline);margin-left:12px;}
+.partGroup{ border-top:1px solid var(--gridline); }
+.partHead{
+  width:100%;
+  display:flex; align-items:baseline; gap:8px;
+  padding:9px 14px;
+  background:none; border:none; text-align:left;
+  color:var(--text-primary);
+  transition:background-color .15s ease;
+}
+.partHead:hover{background:var(--surface-2);}
+.partHead .roman{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px; color:var(--g,var(--accent)); font-weight:700;
+  min-width:22px;
+}
+.partHead .ptitle{
+  font-size:11.5px; font-weight:700; letter-spacing:.08em;
+  flex:1;
+  text-transform:uppercase;
+  color:var(--text-secondary);
+}
+.partHead .chev{
+  font-size:10px; color:var(--text-muted);
+  transition:transform .15s ease;
+}
+.partGroup.open .chev{transform:rotate(90deg);}
+.partList{ display:none; padding-bottom:6px;}
+.partGroup.open .partList{display:block;}
+
+.clauseItem{
+  width:100%;
+  display:flex; align-items:baseline; gap:9px;
+  padding:6px 14px 6px 34px;
+  background:none; border:none; text-align:left;
+  color:var(--text-secondary);
+  border-left:2px solid transparent;
+  transition:background-color .15s ease,color .15s ease;
+}
+.clauseItem .n{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px; font-weight:600;
+  color:var(--g,var(--accent));
+  min-width:26px;
+  opacity:.85;
+}
+.clauseItem .t{
+  font-size:13px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.clauseItem:hover{background:var(--surface-2); color:var(--text-primary);}
+.clauseItem.active{
+  background:var(--surface-2);
+  border-left-color:var(--g,var(--accent));
+  color:var(--text-primary);
+}
+.clauseItem.active .n{color:var(--g,var(--accent)); opacity:1;}
+
+/* Per-part accent colors (dashboard section-color scheme) */
+.partGroup[data-part="I"]{--g:var(--s1);}
+.partGroup[data-part="IA"]{--g:var(--s2);}
+.partGroup[data-part="II"]{--g:var(--s3);}
+.partGroup[data-part="III"]{--g:var(--s4);}
+.partGroup[data-part="IV"]{--g:var(--s5);}
+.partGroup[data-part="V"]{--g:var(--s6);}
+.partGroup[data-part="VI"]{--g:var(--s7);}
+.partGroup[data-part="VII"]{--g:var(--s8);}
+.partGroup[data-part="VIII"]{--g:var(--s9);}
+.partGroup[data-part="IX"]{--g:var(--s10);}
+.partGroup[data-part="SCH"]{--g:var(--s11);}
+.partGroup[data-part="FORM"]{--g:var(--s12);}
+
+/* ---------- Main pane ---------- */
+.main{
+  overflow-y:auto;
+  min-height:0;
+  padding:30px 38px 90px;
+}
+.mainInner{ max-width:760px; margin:0 auto; }
+
+.crumb{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px; color:var(--text-muted);
+  margin-bottom:16px;
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+}
+.crumb a{color:var(--text-secondary); text-decoration:none;}
+.crumb a:hover{color:var(--accent); text-decoration:underline;}
+
+.clauseHead{
+  display:flex; align-items:flex-start; gap:16px;
+  padding-bottom:16px; margin-bottom:22px;
+  border-bottom:1px solid var(--hairline);
+}
+.clauseHead .badge{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px; font-weight:700;
+  color:var(--accent-ink);
+  background:var(--accent);
+  padding:6px 11px;
+  border-radius:7px;
+  white-space:nowrap;
+  margin-top:2px;
+}
+.clauseHead h2{
+  font-family:'Libre Franklin',system-ui,sans-serif;
+  font-size:24px; font-weight:700;
+  letter-spacing:-0.02em;
+  line-height:1.15;
+  margin:0 0 8px;
+  text-wrap:balance;
+}
+.clauseMeta{
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+}
+.pill{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px; letter-spacing:.09em; text-transform:uppercase;
+  padding:3px 10px;
+  border-radius:999px;
+  border:1px solid var(--gridline);
+  color:var(--text-secondary);
+  background:var(--surface-1);
+}
+.pill.amend{
+  color:var(--amend);
+  background:var(--amend-soft);
+  border-color:transparent;
+}
+.copyBtn{
+  margin-left:auto;
+  border:1px solid var(--gridline);
+  background:var(--surface-1);
+  color:var(--text-secondary);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  padding:5px 12px;
+  border-radius:999px;
+  display:flex; align-items:center; gap:5px;
+  flex:0 0 auto;
+  align-self:flex-start;
+  transition:color .15s ease,border-color .15s ease;
+}
+.copyBtn:hover{color:var(--text-primary); border-color:var(--text-muted);}
+
+.clauseBody{
+  font-family:'Libre Franklin',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.8;
+  color:var(--text-primary);
+}
+.clauseBody p{ margin:0 0 16px; text-wrap:pretty; }
+.clauseBody mark{
+  background:var(--mark);
+  color:inherit;
+  border-radius:2px;
+  padding:0 1px;
+}
+.clauseBody .amendTag{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  color:var(--amend);
+  background:var(--amend-soft);
+  padding:2px 9px;
+  border-radius:999px;
+  margin:0 0 14px;
+}
+
+.navFoot{
+  display:flex; justify-content:space-between; gap:12px;
+  margin-top:34px; padding-top:18px;
+  border-top:1px solid var(--hairline);
+}
+.navFoot button{
+  display:flex; flex-direction:column; gap:3px;
+  border:1px solid var(--gridline);
+  background:var(--surface-1);
+  padding:11px 15px;
+  border-radius:var(--radius-m);
+  max-width:46%;
+  transition:border-color .15s ease,background-color .15s ease;
+}
+.navFoot button:hover{border-color:var(--accent); background:var(--surface-2);}
+.navFoot .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.12em;}
+.navFoot .val{font-size:13.5px; font-weight:600; color:var(--text-primary); text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.navFoot .next{align-items:flex-end;}
+.navFoot .next .val{text-align:right;}
+
+/* ---------- Welcome / results ---------- */
+.welcome{ max-width:700px; }
+.welcome h2{
+  font-family:'Libre Franklin',system-ui,sans-serif;
+  font-size:27px; font-weight:800; letter-spacing:-0.02em;
+  margin:0 0 12px; text-wrap:balance;
+}
+.welcome p{ color:var(--text-secondary); margin:0 0 14px; max-width:62ch; line-height:1.6; }
+.statRow{
+  display:flex; gap:12px; flex-wrap:wrap;
+  margin:22px 0 28px;
+}
+.statCard{
+  border:1px solid var(--gridline);
+  background:var(--surface-1);
+  border-radius:var(--radius-m);
+  padding:15px 18px;
+  min-width:118px;
+  box-shadow:0 1px 3px var(--shadow);
+  transition:background-color .18s ease;
+}
+.statCard:hover{background:var(--surface-2);}
+.statCard .figure{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:23px; font-weight:700; color:var(--accent);
+  letter-spacing:-0.02em; font-variant-numeric:tabular-nums; line-height:1;
+}
+.statCard .cap{ font-family:'IBM Plex Mono',monospace; font-size:9.5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.14em; margin-top:9px; }
+.exampleRow{
+  display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;
+}
+.exampleChip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  border:1px solid var(--gridline);
+  background:var(--surface-1);
+  padding:6px 13px;
+  border-radius:999px;
+  color:var(--text-secondary);
+  transition:border-color .15s ease,color .15s ease;
+}
+.exampleChip:hover{border-color:var(--accent); color:var(--accent);}
+
+.resultsHead{
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin-bottom:16px; flex-wrap:wrap; gap:6px;
+}
+.resultsHead h2{ font-family:'Libre Franklin',system-ui,sans-serif; font-size:20px; font-weight:700; letter-spacing:-0.015em; margin:0; }
+.resultsHead .count{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-muted); }
+.resultCard{
+  position:relative;
+  display:block;
+  overflow:hidden;
+  border:1px solid var(--gridline);
+  background:var(--surface-2);
+  border-radius:var(--radius-m);
+  padding:14px 17px 14px 19px;
+  margin-bottom:11px;
+  color:var(--text-primary);
+  text-decoration:none;
+  box-shadow:0 1px 3px var(--shadow);
+  transition:border-color .15s ease,box-shadow .15s ease,background-color .15s ease;
+}
+.resultCard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:6px;
+  background:var(--accent);
+}
+.resultCard:hover{ border-color:var(--accent); box-shadow:0 2px 10px var(--shadow); background:var(--surface-3); }
+.resultCard .rhead{ display:flex; align-items:baseline; gap:10px; margin-bottom:5px; }
+.resultCard .rnum{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--accent); font-weight:600; font-variant-numeric:tabular-nums; }
+.resultCard .rtitle{ font-size:15.5px; font-weight:700; letter-spacing:-0.01em; }
+.resultCard .rpart{ font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-muted); margin-left:auto; white-space:nowrap; text-transform:uppercase; letter-spacing:.06em; }
+.resultCard .rsnippet{ font-size:13px; color:var(--text-secondary); line-height:1.6; }
+.resultCard .rsnippet mark{ background:var(--mark); color:inherit; border-radius:2px; }
+.noResults{ color:var(--text-muted); font-size:13.5px; padding:20px 0; }
+
+.menuBtn{
+  display:none;
+  border:1px solid var(--gridline);
+  background:var(--surface-1);
+  width:34px; height:34px; border-radius:10px;
+  align-items:center; justify-content:center;
+  color:var(--text-secondary);
+  z-index:6;
+}
+.menuBtn:hover{color:var(--text-primary);border-color:var(--text-muted);}
+
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-thumb{ background:var(--hairline); border-radius:6px; }
+::-webkit-scrollbar-track{ background:transparent; }
+
+@media (prefers-reduced-motion:reduce){
+  *{ transition:none !important; }
+}
+/* QLASSIC tweak: trade codes are whole words (CARPARK, EXTWALL), not by-law numbers, so the
+   code column needs more room than the 26px the UBBL template allots; plus styling for the
+   requirement tables rendered from ROW| lines. */
+.clauseItem .n{min-width:88px;}
+.qa{width:100%;border-collapse:collapse;margin:6px 0 20px;table-layout:fixed;}
+.qa th{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);text-align:left;padding:5px 8px 6px;border-bottom:1px solid var(--hairline);}
+.qa td{padding:7px 8px;border-bottom:1px solid var(--gridline);vertical-align:top;line-height:1.5;font-size:13px;overflow-wrap:break-word;}
+.qa tr:last-child td{border-bottom:none;}
+.qa td.c-req{width:44%;}
+.qa td.c-fin{width:16%;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-secondary);}
+.qa td.c-tol{width:18%;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;}
+.qa td.c-tool{width:22%;font-size:12.5px;color:var(--text-secondary);}
+.grpHead{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:22px 0 2px;padding-top:10px;border-top:1px solid var(--gridline);}
+@media (max-width:640px){.qa td,.qa th{font-size:12px;padding:6px 5px;}.qa td.c-req{width:38%;}.qa td.c-tool{width:26%;}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <button class="menuBtn" id="menuBtn" aria-label="Open trade index" title="Open index">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+    <div class="head-inner">
+      <a class="back-link" href="/Projects/">&larr; Project Dashboard</a>
+      <div class="head-row">
+        <div class="head-main">
+          <div class="kicker">CIS 7:2021 &middot; CIDB Malaysia &middot; Annex A (Informative)</div>
+          <h1>QLASSIC Navigator</h1>
+          <p class="sub">Quality Standard for Architectural Works &mdash; every requirement, tolerance and tool for the ten trades of Annex A, Part 1 Internal Finishes and Part 2 External Finishes.</p>
+        </div>
+        <div class="side">
+          <button type="button" class="theme-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">
+            <svg id="themeIcon" width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 100 16 6.5 6.5 0 010-16z" fill="currentColor"/></svg>
+            <span id="themeLabel">Dark mode</span>
+          </button>
+          <div class="gen-date">10 trades &middot; 5 defect groups each &middot; Annex A</div>
+        </div>
+      </div>
+    </div>
+    <div class="search-row">
+      <div class="searchwrap">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6.2" stroke="currentColor" stroke-width="1.5"/><path d="M17 17l-3.6-3.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input id="searchInput" type="text" placeholder="Search a requirement or trade &mdash; e.g. lippage, warpage, hollowness, gap&hellip;" autocomplete="off" spellcheck="false">
+        <button id="searchClear" aria-label="Clear search" title="Clear search">&times;</button>
+      </div>
+      <form class="jumpform" id="jumpForm">
+        <label for="jumpInput">Go to trade</label>
+        <input id="jumpInput" type="text" placeholder="e.g. DOOR" autocomplete="off" spellcheck="false">
+        <button id="jumpGo" type="submit">Open</button>
+      </form>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="sidebarScrim" id="scrim"></div>
+    <nav class="sidebar" id="sidebar" aria-label="Trade index"></nav>
+    <main class="main" id="main">
+      <div class="mainInner" id="mainInner"></div>
+    </main>
+  </div>
+</div>
+
+<script id="qlassic-data" type="application/json">
+{"meta":{"trades":10,"rows":0,"parts":2},"bylaws":[{"id":"bylaw-FLOOR","kind":"bylaw","num":"FLOOR","title":"Floor","part":"1","partTitle":"Part 1 — Internal Finishes","amendments":["printed pp. 10–11"],"content":"Part 1 — Internal Finishes — Floor. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed pp. 10–11.\nApplies to: Carpet, cement sand screed, engineered timber, tiles, vinyl/linoleum and others.\nLegend — C Carpet · CS Cement Sand Screed · ET Engineered Timber/Material · T Tiles · V Vinyl/Linoleum · O Others.\nSampling — Sampled by GFA.\nGROUP|1|Finishing\nROW|No construction stain marks|All|no numeric tolerance|Visual\nROW|Consistent tonality/shading (only applies for manufactured product)|T/ ET/ CS/ C|no numeric tolerance|Visual\nROW|Surface should not be unduly rough or patchy|CS|no numeric tolerance|Visual\nROW|No permanent foreign material visually detected|All|no numeric tolerance|Visual\nROW|Finished texture to be consistent|O|no numeric tolerance|Visual\nROW|Good paintwork (e.g. no signs of brush marks/ pin holes/ blistering/ peeling/ trowels marks and etc.)|O|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Evenness of surface|CS/ T/ ET/ V/ O|≤ 3 mm per 1.2 m|Spirit level 1.2 m & steel wedge\nROW|Falls in wet areas should be in right direction|CS/ T/ V/ O|no numeric tolerance|Spirit level 1.2 m\nROW|For staircase, the variance in lengths of treads and risers must be within tolerance from dimensions specified in the approved drawings|CS/ T/ ET/ V /O|≤ 5 mm|Spirit level 1.2 m and steel wedges\nROW|Joints are aligned with skirting tiles or wall tiles|T|no numeric tolerance|Visual\nROW|Joints are aligned between tiles|T|no numeric tolerance|Visual\nROW|Lippage between two tiles|T|≤ 1 mm|L-square (200 mm x 300 mm) and steel wedge\nROW|No protrusion/ potential of tripping over of panels|O|no numeric tolerance|Visual & Physical\nGROUP|3|Cracks and Damages\nROW|No visible damages/defects (e.g. chipping, broken tiles, crack tiles, scratches, broken timber and etc.)|All|no numeric tolerance|Visual\nROW|No warpage or sagging|ET/ T|no numeric tolerance|Visual\nGROUP|4|Hollowness/Delamination\nROW|No loose floor panels or rocking|O|no numeric tolerance|Visual & Physical\nROW|No hollow/drumming sound when swiped and then tapped|CS/ T/ O|no numeric tolerance|Tapping rod & Auditory (hearing)\nROW|No sign of delamination|C/ ET/ O|no numeric tolerance|Visual & Physical\nROW|Timber strips to rest firmly on joists or screeds|ET|no numeric tolerance|Visual & Physical\nGROUP|5|Jointing\nROW|Edge to be straight and aligned|All|no numeric tolerance|Visual\nROW|Consistent skirting thickness and height|All|no numeric tolerance|Visual\nROW|Consistent and neat skirting joints|All|no numeric tolerance|Visual\nROW|Grout joints are of consistent colour, size and properly filled|T/ V/ CS|no numeric tolerance|Visual\nROW|Edges of the floor are properly sealed and anchored|ET/ C|no numeric tolerance|Visual & Physical\nROW|Joints should not be visible|C/ ET|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-WALL","kind":"bylaw","num":"WALL","title":"Internal Wall","part":"1","partTitle":"Part 1 — Internal Finishes","amendments":["printed pp. 12–13"],"content":"Part 1 — Internal Finishes — Internal Wall. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed pp. 12–13.\nApplies to: Plaster & paint, tiles, painting, facing brick, wallpaper, wood/timber panel, cladding/curtain wall, glass blocks/panels, textured plaster and others.\nLegend — PP Plaster & Paint · T Tiles · P Painting · FB Facing Brick · WP Wallpaper · WT Wood/Timber panel · CL Cladding/Curtain wall · GB Glass blocks/Glass panels · TP Textured Plaster · O Others.\nSampling — Sampled by GFA.\nGROUP|1|Finishing\nROW|No construction stain marks|All|no numeric tolerance|Visual\nROW|Good paintwork (e.g. no signs of paint drips/ brush marks/ pin holes/ blistering/ peeling/ trowels marks and etc.)|PP/ P/ TP|no numeric tolerance|Visual\nROW|Consistent tonality/shading (only applies for manufactured product)|T/ CL/ WT|no numeric tolerance|Visual\nROW|No rough/patchy surface resulted from touch-up work|PP/ P|no numeric tolerance|Visual\nROW|Finished texture to be consistent|FB/ O|no numeric tolerance|Visual\nROW|Surface should be free from chalkiness|PP|no numeric tolerance|Visual & Physical\nROW|Surface should be smoothly finished|WT|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Evenness of surface|All|≤ 3 mm over 1.2 m|Spirit level 1.2 m & steel wedge\nROW|Verticality of wall|All|≤ 3 mm over 1.2 m|Spirit level 1.2 m & steel wedge\nROW|Walls meet at right angle|All|≤ 4 mm over 300 mm|L-square (200 mm x 300 mm) & steel wedge\nROW|Joints are aligned between tiles|T|no numeric tolerance|Visual\nROW|Lippage between two tiles|T|≤ 1 mm|L-square (200 mm x 300 mm) and steel wedge\nROW|Surface of wallpaper should be even|WP|no numeric tolerance|Visual\nROW|Glass blocks/panels should be properly aligned|GB|no numeric tolerance|Visual\nGROUP|3|Cracks and Damages\nROW|No visible damages/defects (e.g. visual crack/dent/scratches/corrosion and etc.)|All|no numeric tolerance|Visual\nROW|Warpage should not be detected|T/ WT|no numeric tolerance|Visual\nGROUP|4|Hollowness/Delamination\nROW|No hollow/drumming sound when swiped and then tapped|PP/ T/ P/ TP|no numeric tolerance|Tapping rod & Auditory (hearing)\nROW|No sign of delamination|WP/ WT|no numeric tolerance|Visual & Physical\nROW|Timber panels should rest firmly on joists screed|WT|no numeric tolerance|Visual & Physical\nGROUP|5|Jointing\nROW|Edges to be straight, aligned and consistent|All|no numeric tolerance|Visual\nROW|Joints should not be visible|WP/ WT|no numeric tolerance|Visual\nROW|Proper anchoring at all edges|WP|no numeric tolerance|Visual\nROW|Edges should be neatly laid and finished|WP|no numeric tolerance|Visual\nROW|Consistent and neat marking|T/ FB/ CL/ GB|no numeric tolerance|Visual\nROW|Grout joints are of consistent size and properly filled|T|no numeric tolerance|Visual\nROW|Proper anchorage for panels|CL|no numeric tolerance|Visual\nROW|Edges should be properly aligned and sealed|WT|no numeric tolerance|Visual\nROW|Consistent spacing and within allowable tolerance|CL|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-CEILING","kind":"bylaw","num":"CEILING","title":"Ceiling","part":"1","partTitle":"Part 1 — Internal Finishes","amendments":["printed p. 14"],"content":"Part 1 — Internal Finishes — Ceiling. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 14.\nApplies to: Skim coat/paint ceilings and false/grid system/plaster ceilings.\nLegend — SC Skim coat/Paint · FC False/Grid system/Plaster.\nSampling — Sampled by GFA.\nGROUP|1|Finishing\nROW|No construction stain marks (e.g. leakages and excess paint/ plaster)|All|no numeric tolerance|Visual\nROW|Consistent colour tone|All|no numeric tolerance|Visual\nROW|Paintwork (e.g. good opacity, no signs of brush marks, pin holes, blistering, trowels marks and etc.)|All|no numeric tolerance|Visual\nROW|Surface should be smooth, even, not wavy and not sagging|All|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Ceiling panels to be level with each other|FC|no numeric tolerance|Visual\nROW|Ceiling edges should be straight and aligned|All|no numeric tolerance|Visual\nROW|Ceiling grid to be straight and aligned|FC|no numeric tolerance|Visual\nROW|Ceiling panels should not warp and laid neatly into grids|FC|no numeric tolerance|Visual\nGROUP|3|Cracks and Damages\nROW|No damages (e.g. concrete spalling, chipped ceiling panels and cracks,)|All|no numeric tolerance|Visual\nROW|No sign of corrosion (e.g. ceiling grids and metal ceiling or panels)|FC|no numeric tolerance|Visual\nGROUP|4|Roughness & Patchiness\nROW|Finished concrete should not show any signs of rough surface|SC|no numeric tolerance|Visual\nROW|Any cold joints or formwork joints are grounded smooth|SC|no numeric tolerance|Visual\nROW|Touch-up work should not show any signs of rough or patchy surface|All|no numeric tolerance|Visual\nGROUP|5|Jointing\nROW|Joints between ceiling and wall should be neat and consistent|All|no numeric tolerance|Visual\nROW|Joints between ceiling tee and panel should be neat and consistent|FC|no numeric tolerance|Visual\nROW|Access opening joints should be neat and consistent width|FC|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-DOOR","kind":"bylaw","num":"DOOR","title":"Door","part":"1","partTitle":"Part 1 — Internal Finishes","amendments":["printed pp. 15–16"],"content":"Part 1 — Internal Finishes — Door. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed pp. 15–16.\nApplies to: Panel door, decorative door, flush door, sliding door, glass door and others.\nLegend — The only internal-finish trade with numeric tolerances on its gaps..\nSampling — Sampled by GFA.\nGROUP|1|Joints and Gaps\nROW|Consistent gap between bottom of door panel and finished floor|—|≤ 5 mm / Project requirement|Steel wedge\nROW|No visible gaps between door frame and wall|—|no numeric tolerance|Visual\nROW|Neat joints between door frame and wall internally and externally|—|no numeric tolerance|Visual\nROW|Consistent gap between door panel and frame|—|≤ 5 mm / Project requirement|Steel gauge\nROW|No visible gaps for joints at door panel and frame|—|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Aligned and level with opening and wall beside it|—|no numeric tolerance|Visual & spirit level 1.2 m\nROW|Double panel doors to flush with each other|—|no numeric tolerance|Visual\nROW|Doors frame and panel to flush|—|no numeric tolerance|Visual\nROW|Door panel and frame corners maintained at right angles|—|no numeric tolerance|L-square (200 mm x 300 mm)\nROW|No rattling sound when the door is closed|—|no numeric tolerance|Physical & Auditory (hearing)\nGROUP|3|Materials and Damages\nROW|No stains marks and any visible damages|—|no numeric tolerance|Visual\nROW|Door panel not sagging and warp|—|no numeric tolerance|Visual\nROW|Door joints and nail holes filled up, properly sanded with good paintwork|—|no numeric tolerance|Visual\nROW|No additional timber strips added for site adjustment should be detected|—|no numeric tolerance|Visual\nROW|Glazing clean and evenly sealed with gasket|—|no numeric tolerance|Visual\nROW|No sign of corrosion|—|no numeric tolerance|Visual\nROW|Paintwork (e.g. good opacity, no signs of paint drips/ brush marks/ pin holes and blistering) including top and bottom of door panel|—|no numeric tolerance|Visual & Angle Mirror\nGROUP|4|Functionality\nROW|Ease in opening, closing and locking|—|no numeric tolerance|Physical\nROW|No squeaky sound during opening and closing of the door|—|Test minimum 3 times continuously and pass 2 times|Physical & Auditory (hearing)\nROW|Lockset should be functional|—|Test minimum 3 times continuously and pass 2 times|Physical\nGROUP|5|Accessories Defects\nROW|Accessories with good fit and no construction stains/ corrosion|—|no numeric tolerance|Visual\nROW|No missing or defective accessories|—|no numeric tolerance|Visual\nROW|Screw not over tightened or fastened properly/ no defective screw head|—|no numeric tolerance|Visual\nAccessories: lock set, flush bolt, doorknob, hinges, door closer, door guard, door latch, alarm sensor and door stopper.\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-WINDOWS","kind":"bylaw","num":"WINDOWS","title":"Windows","part":"1","partTitle":"Part 1 — Internal Finishes","amendments":["printed p. 17"],"content":"Part 1 — Internal Finishes — Windows. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 17.\nApplies to: Casement window, top hung window, sliding window, louvers window, adjustable window and others.\nLegend — No numeric tolerance is stipulated anywhere in this trade — every requirement is visual or physical pass/fail..\nSampling — Sampled by GFA.\nGROUP|1|Joints and Gaps\nROW|No visible gaps between window frame and wall|—|no numeric tolerance|Visual\nROW|Neat joints between window frame and wall, internally and externally|—|no numeric tolerance|Visual\nROW|No visible gaps for joints at window panel and frame|—|no numeric tolerance|Visual\nROW|Consistent gap between window panel and frame|—|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Aligned and level with openings and wall beside it|—|no numeric tolerance|Visual\nROW|Window panel and frame corner maintained at right angle|—|no numeric tolerance|Visual\nGROUP|3|Materials and Damages\nROW|No stain marks and visible damages/ defects|—|no numeric tolerance|Visual\nROW|Louvered window with glass panels of correct length|—|no numeric tolerance|Visual\nROW|Glazing clean and evenly sealed with sealant or gasket for aluminium windows|—|no numeric tolerance|Visual\nROW|No sign of corrosion|—|no numeric tolerance|Visual\nROW|No patchy paintwork resulted from touch up work|—|no numeric tolerance|Visual\nGROUP|4|Functionality\nROW|Ease opening, closing and locking|—|no numeric tolerance|Physical\nROW|No squeaky sound during opening and closing of the window|—|Test minimum 3 times continuously and pass 2 times|Physical & Auditory (hearing)\nROW|No sign of leakage|—|no numeric tolerance|Visual\nGROUP|5|Accessories Defects\nROW|Lock sets with good fit and aligned|—|no numeric tolerance|Visual\nROW|Accessories with good fit and no construction stains/ corrosion|—|no numeric tolerance|Visual\nROW|No missing or defective accessories|—|no numeric tolerance|Visual\nROW|Screw not over tightened or fastened properly/ no defective screw head|—|no numeric tolerance|Visual\nAccessories: hinges, screw, security bar for louvers window, alarm sensor and handle.\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-FIXTURES","kind":"bylaw","num":"FIXTURES","title":"Internal Fixtures","part":"1","partTitle":"Part 1 — Internal Finishes","amendments":["printed p. 18"],"content":"Part 1 — Internal Finishes — Internal Fixtures. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 18.\nApplies to: Wash basin, toilet bowl/water closet, sink, railing (e.g. at balcony/ staircase/ family area), bathtub, wardrobe, kitchen cabinet, shower screen, fixed mirror, vanity top, shower tray, framed or frameless tempered glass shower enclosure and others.\nLegend — No Tolerance column in the source table for this trade — all checks are visual or physical..\nSampling — Sampled by GFA.\nGROUP|1|Joints and Gaps\nROW|Consistent gaps and neat joint|—|no numeric tolerance|Visual\nROW|Welding joints grounded or flushed|—|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Level and in alignment|—|no numeric tolerance|Visual & Spirit Level 1.2 m\nGROUP|3|Materials and Damages\nROW|No stain marks and visible damages/ defects|—|no numeric tolerance|Visual\nROW|Good paintwork|—|no numeric tolerance|Visual\nGROUP|4|Functionality\nROW|Functional, secured and safe|—|no numeric tolerance|Visual & Physical\nGROUP|5|Accessories Defects\nROW|No missing or defective accessories|—|no numeric tolerance|Visual\nROW|Accessories with good fit and no stains|—|no numeric tolerance|Visual\nROW|No sign of corrosion|—|no numeric tolerance|Visual\nAccessories: screws, bottle trap, hose and piping for sanitary fittings/sink, handle and hinges for kitchen cabinet/wardrobe/shower screen, etc. Any M&E fittings attached to the internal fixtures shall be assessed as accessories defects.\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-ROOF","kind":"bylaw","num":"ROOF","title":"Roof","part":"2","partTitle":"Part 2 — External Finishes","amendments":["printed p. 19"],"content":"Part 2 — External Finishes — Roof. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 19.\nApplies to: Concrete flat roof and membrane roof, concrete and clay tiles, profile metal tiles, pressed metal tiles and solar cell roof, waterproofing, gutters and rainwater down pipes (RWDP).\nLegend — FR Flat roof · PR Pitched roof.\nSampling — Roof: 50% of blocks/units.\nGROUP|1|Finishing\nROW|No construction stain marks or rust|All|no numeric tolerance|Visual\nROW|No rough surface|FR|no numeric tolerance|Visual\nROW|Good paintwork|All|no numeric tolerance|Visual\nROW|Consistent colour tone|All|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Even and level, no sign of tripping|All|no numeric tolerance|Visual\nROW|Falls in right direction|All|no numeric tolerance|Visual\nROW|Roof tiles in alignment|PR|no numeric tolerance|Visual\nGROUP|3|Cracks and Damages\nROW|No visible damages/ defects, (e.g. cracks, chippings, stripping, no sharp, protrusion etc.)|All|no numeric tolerance|Visual\nGROUP|4|Construction\nROW|No sign of leakage|All|no numeric tolerance|Visual\nROW|Proper dressing for any protrusion|All|no numeric tolerance|Visual\nROW|No sign of clogging and ponding|All|no numeric tolerance|Visual\nROW|Openings to be sealed to prevent pest invasion|All|no numeric tolerance|Visual\nROW|RWDP inlet to be lower than the surrounding gutter invert level|All|no numeric tolerance|Visual\nROW|Gutter and RWDP inlet to be covered to prevent chockage, where practical|All|no numeric tolerance|Visual\nROW|Neat and secured installation of fixtures (such as solar cell roof)|All|no numeric tolerance|Visual\nGROUP|5|Jointing\nROW|Consistent joint width and neat|All|no numeric tolerance|Visual\nROW|Good laps at joints and proper vertical abutment details|All|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-EXTWALL","kind":"bylaw","num":"EXTWALL","title":"External Wall","part":"2","partTitle":"Part 2 — External Finishes","amendments":["printed p. 20"],"content":"Part 2 — External Finishes — External Wall. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 20.\nApplies to: Plaster & paint, tiles, painting, facing brickwork, cladding/curtain wall, architectural coating and others.\nLegend — PP Plaster & Paint · T Tiles · P Painting · FB Facing brickwork · CL Cladding/Curtain wall (e.g. aluminium, pre-cast panel, glass panel, etc.) · AC Architectural coating · O Others.\nSampling — Sampled by GFA.\nGROUP|1|Finishing\nROW|No stain marks (e.g. mortar stain, paint stain, paint drips)|All|no numeric tolerance|Visual\nROW|Consistent colour tone, good paintwork, no efflorescence, no discolouration and fading|All|no numeric tolerance|Visual\nROW|No rough/ patchy surface|PP/ P|no numeric tolerance|Visual\nROW|No sign of corrosion|CL|no numeric tolerance|Visual\nROW|Surface should be free from peeling, blister and chalkiness|P|no numeric tolerance|Visual\nROW|Finish texture to be consistent|AC|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Wall should be aligned and not wavy|All|no numeric tolerance|Visual\nROW|Edges to be straight and aligned|All|no numeric tolerance|Visual\nROW|Evenness of surface|All|no numeric tolerance|Visual\nGROUP|3|Cracks and Damages\nROW|No visible damages/ defects /no dented or scratches|All|no numeric tolerance|Visual\nGROUP|4|Construction\nROW|Weep holes are provided as specified|All|no numeric tolerance|Visual\nROW|Neat and secured installation of fixtures (e.g. aluminium strip, glass holder)|All|no numeric tolerance|Visual\nROW|Consistent and neat marking|All|no numeric tolerance|Visual\nGROUP|5|Jointing\nROW|Joints are aligned between tiles, and consistent in size|T|no numeric tolerance|Visual\nROW|Gaps around openings to be properly sealed|CL|no numeric tolerance|Visual\nROW|Joints of regular width as specified|CL|no numeric tolerance|Visual\nROW|Sealant material compatible with cladding|CL|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-APRON","kind":"bylaw","num":"APRON","title":"Apron and Perimeter Drain","part":"2","partTitle":"Part 2 — External Finishes","amendments":["printed p. 21"],"content":"Part 2 — External Finishes — Apron and Perimeter Drain. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 21.\nApplies to: Assessed together with the drain cover and inspection chamber.\nLegend — Sub-elements: apron, perimeter drain, drain cover..\nSampling — Sampled by GFA.\nGROUP|1|Finishing\nROW|No stain marks|All|no numeric tolerance|Visual\nROW|No rough/patchy surface|All|no numeric tolerance|Visual\nROW|No sign of corrosion|All|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Edge to be straight and even|All|no numeric tolerance|Visual\nGROUP|3|Cracks and Damages\nROW|No visible damages/defects|All|no numeric tolerance|Visual\nROW|Securely fixed, functional and safe|All|no numeric tolerance|Visual & Physical\nGROUP|4|Fall/Gradient\nROW|Free flowing and no water ponding|All|no numeric tolerance|Visual\nGROUP|5|Joints and Gaps\nROW|Consistent joints width and neat|All|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"bylaw-CARPARK","kind":"bylaw","num":"CARPARK","title":"Car Park / Car Porch","part":"2","partTitle":"Part 2 — External Finishes","amendments":["printed p. 22"],"content":"Part 2 — External Finishes — Car Park / Car Porch. Source: Annex A (Informative) — Quality Standard for Architectural Works, printed p. 22.\nApplies to: An area or building where cars or other vehicles may be left temporarily, such as a multi-level car park and a car porch attached to the building.\nLegend — Item to be assessed are floor, wall, ceiling, column, fixtures and basic M&E fittings..\nSampling — Car park: 10 m length per floor.\nGROUP|1|Finishing\nROW|No stain marks|All|no numeric tolerance|Visual\nROW|Consistent colour and good paintwork|All|no numeric tolerance|Visual\nROW|No rough/patchy surface|All|no numeric tolerance|Visual\nGROUP|2|Alignment and Evenness\nROW|Evenness of surface|All|no numeric tolerance|Visual\nROW|Falls in right direction|All|no numeric tolerance|Spirit Level 1.2 m\nROW|Edge to be straight|All|no numeric tolerance|Visual\nGROUP|3|Materials and Damages\nROW|No visible damages/ defects|All|no numeric tolerance|Visual\nROW|No missing or defective accessories|All|no numeric tolerance|Visual\nROW|No sign of corrosion|All|no numeric tolerance|Visual\nGROUP|4|Functionality\nROW|Securely fixed, functional and safe|All|no numeric tolerance|Visual & Physical\nGROUP|5|Joints and Gaps\nROW|Consistent joints width and neat|All|no numeric tolerance|Visual\nROW|No visible gaps for M&E fittings|All|no numeric tolerance|Visual\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."}],"parts":[{"code":"1","title":"Part 1 — Internal Finishes","bylawNums":["FLOOR","WALL","CEILING","DOOR","WINDOWS","FIXTURES"]},{"code":"2","title":"Part 2 — External Finishes","bylawNums":["ROOF","EXTWALL","APRON","CARPARK"]}],"schedules":[{"id":"schedule-READ","kind":"schedule","key":"READ","ordinal":1,"ordinalWord":"Reading","title":"How to read these tables","amendments":["Legend"],"content":"Every trade lists its defect groups, and under each group every requirement the assessor checks, with the tolerance and the tool or method used.\n\"no numeric tolerance\" in a line means the source table shows \"-\" for that requirement: the check is visual or physical pass/fail, with no measured limit. Where a number does appear, it is the stipulated limit — for example lippage ≤ 1 mm, evenness ≤ 3 mm over 1.2 m, door gaps ≤ 5 mm or project requirement.\nGrouping follows the defect groups printed in Annex A. Rows are listed in source order.\n- in the Tolerance column means no numeric tolerance is stipulated — the check is visual or physical pass/fail."},{"id":"schedule-SOURCE","kind":"schedule","key":"SOURCE","ordinal":2,"ordinalWord":"Source","title":"Source and provenance","amendments":["Verified against extract"],"content":"Source: CIS 7:2021 — Quality Assessment System for Building Construction Works (QLASSIC), Annex A (Informative) — Quality Standard for Architectural Works — Part 1 Internal Finishes (printed pp. 10–18) and Part 2 External Finishes (printed pp. 19–22), all ten trades.\nSource PDF: Obsidian AL/Knowledge-Library/codes/source-pdfs/CIS_7_2021_QLASSIC.pdf (38 pages, held in the Knowledge Library).\nText extract used for verification: Obsidian AL/Knowledge-Library/codes/source-pdfs/cis-7-2021-qlassic-extract.txt\nEvery requirement, tolerance and tool string on this page was checked against that extract at build time, and the build fails if a string is not found. Tolerances are not rounded or paraphrased.\nThis is a reading aid for the standard, not a substitute for it. Assessments are carried out by CIDB-certified assessors."},{"id":"schedule-SCOPE","kind":"schedule","key":"SCOPE","ordinal":3,"ordinalWord":"Scope","title":"What this navigator covers","amendments":["Annex A only"],"content":"Covered: Annex A — Quality Standard for Architectural Works. All six internal-finish trades (floor, internal wall, ceiling, door, windows, internal fixtures) and all four external-finish trades (roof, external wall, apron and perimeter drain, car park/car porch), with every requirement, tolerance and tool.\nNot covered: Annex B (basic M&E fittings) and Annex C (external works) quality standards, and Section 2 of the standard (assessment method, scoring, sampling, categories and weightages). Ask and they can be added the same way."}],"forms":[]}
+</script>
+<script>
+(function(){
+  "use strict";
+  var DATA = JSON.parse(document.getElementById('qlassic-data').textContent);
+  var bylaws = DATA.bylaws, parts = DATA.parts, schedules = DATA.schedules, forms = DATA.forms;
+
+  var byId = {};
+  bylaws.forEach(function(b){ byId[b.id] = b; });
+  schedules.forEach(function(s){ byId[s.id] = s; });
+  forms.forEach(function(f){ byId[f.id] = f; });
+
+  var allEntries = bylaws.concat(schedules, forms);
+  var jumpIndex = {};
+  allEntries.forEach(function(e){
+    if(e.num) jumpIndex[String(e.num).toLowerCase()] = e.id;
+    if(e.title) jumpIndex[String(e.title).toLowerCase()] = e.id;
+    if(e.key) jumpIndex[String(e.key).toLowerCase()] = e.id;
+  });
+  allEntries.forEach(function(e){
+    e._searchTitle = (e.title||'').toLowerCase();
+    e._searchBody = plain(e.content||'').toLowerCase();
+  });
+
+  // ---------------- Theme ----------------
+  var themeKey = null;
+  try{
+    themeKey = localStorage.getItem('qlassic-theme');
+    if(themeKey) document.documentElement.setAttribute('data-theme', themeKey);
+  }catch(e){}
+  function paintThemeIcon(){
+    var dark = (document.documentElement.getAttribute('data-theme') === 'dark') ||
+      (!document.documentElement.getAttribute('data-theme') && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.getElementById('themeIcon').innerHTML = dark
+      ? '<path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="10" r="3.6" fill="currentColor"/>'
+      : '<path d="M10 2a8 8 0 100 16 6.5 6.5 0 010-16z" fill="currentColor"/>';
+    var tlab = document.getElementById('themeLabel');
+    if (tlab) tlab.textContent = dark ? 'Light mode' : 'Dark mode';
+  }
+  paintThemeIcon();
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var next;
+    if(!cur) next = sysDark ? 'light' : 'dark';
+    else if(cur === 'dark') next = 'light';
+    else next = 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('qlassic-theme', next); }catch(e){}
+    paintThemeIcon();
+  });
+
+  // ---------------- Sidebar build ----------------
+  var sidebar = document.getElementById('sidebar');
+  var html = '';
+
+  html += '<div class="sideSection"><div class="sideSectionTitle"><span>Trades &mdash; Annex A</span></div></div>';
+  parts.forEach(function(p, pi){
+    html += '<div class="partGroup' + (pi===0?' open':'') + '" data-part="'+p.code+'">';
+    html += '<button class="partHead" type="button"><span class="roman">'+p.code+'</span><span class="ptitle">'+escapeHtml(p.title||'')+'</span><span class="chev">&#9656;</span></button>';
+    html += '<div class="partList">';
+    p.bylawNums.forEach(function(num){
+      var b = byId['bylaw-'+num];
+      html += '<button class="clauseItem" type="button" data-id="'+b.id+'"><span class="n">'+num+'</span><span class="t">'+escapeHtml(b.title)+'</span></button>';
+    });
+    html += '</div></div>';
+  });
+
+  html += '<div class="sideSection"><div class="sideSectionTitle"><span>Source &amp; notes</span></div></div>';
+  html += '<div class="partGroup" data-part="SCH"><button class="partHead" type="button"><span class="roman">&sect;</span><span class="ptitle">Source &amp; notes</span><span class="chev">&#9656;</span></button><div class="partList">';
+  schedules.forEach(function(s){
+    html += '<button class="clauseItem" type="button" data-id="'+s.id+'"><span class="n">'+s.ordinalWord+'</span><span class="t">'+escapeHtml(s.title)+'</span></button>';
+  });
+  html += '</div></div>';
+
+  sidebar.innerHTML = html;
+
+  sidebar.addEventListener('click', function(ev){
+    var head = ev.target.closest('.partHead');
+    if(head){
+      head.parentElement.classList.toggle('open');
+      return;
+    }
+    var item = ev.target.closest('.clauseItem');
+    if(item){
+      openEntry(item.getAttribute('data-id'));
+      closeMobileSidebar();
+    }
+  });
+
+  // ---------------- Mobile sidebar ----------------
+  var scrim = document.getElementById('scrim');
+  function openMobileSidebar(){ sidebar.classList.add('open'); scrim.classList.add('show'); }
+  function closeMobileSidebar(){ sidebar.classList.remove('open'); scrim.classList.remove('show'); }
+  document.getElementById('menuBtn').addEventListener('click', openMobileSidebar);
+  scrim.addEventListener('click', closeMobileSidebar);
+
+  // ---------------- Helpers ----------------
+  function escapeHtml(s){
+    return (s||'').replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  // Marked-up content -> readable plain text (search index + result snippets)
+  function plain(text){
+    return (text||'').split('\n').map(function(l){
+      if(l.indexOf('GROUP|') === 0) return 'Group ' + l.slice(6).split('|').join(' — ');
+      if(l.indexOf('ROW|') === 0){
+        var c = l.slice(4).split('|');
+        var out = c[0];
+        if(c[1] && c[1] !== '—') out += ' (' + c[1] + ')';
+        out += ' — tolerance: ' + c[2] + ' — tool: ' + c[3];
+        return out;
+      }
+      return l;
+    }).join('\n');
+  }
+
+  // Content -> HTML. ROW| lines become table rows; GROUP| lines become group headings.
+  function contentToHtml(text, query){
+    var COL = ['c-req','c-fin','c-tol','c-tool'];
+    var HEAD = '<thead><tr><th class="c-req">Requirement</th><th class="c-fin">Finishes</th><th class="c-tol">Tolerance</th><th class="c-tool">Tool / method</th></tr></thead>';
+    var lines = (text||'').split('\n');
+    var out = [], rows = null;
+    var re = query ? new RegExp('('+escapeRe(query)+')','ig') : null;
+    function hl(s){ return re ? s.replace(re, '<mark>$1</mark>') : s; }
+    function flush(){
+      if(rows !== null){
+        out.push('<table class="qa">' + HEAD + '<tbody>' + rows + '</tbody></table>');
+        rows = null;
+      }
+    }
+    lines.forEach(function(raw){
+      var line = raw.trim();
+      if(!line) return;
+      if(line.indexOf('GROUP|') === 0){
+        flush();
+        var g = line.slice(6).split('|');
+        out.push('<div class="grpHead">' + escapeHtml(g[0]) + ' &middot; ' + escapeHtml(g[1]||'') + '</div>');
+        return;
+      }
+      if(line.indexOf('ROW|') === 0){
+        var c = line.slice(4).split('|');
+        if(rows === null) rows = '';
+        var cells = '';
+        for(var i=0;i<4;i++){
+          cells += '<td class="' + COL[i] + '">' + hl(escapeHtml(c[i] === undefined ? '' : c[i])) + '</td>';
+        }
+        rows += '<tr>' + cells + '</tr>';
+        return;
+      }
+      flush();
+      var esc = hl(escapeHtml(line));
+      if(/^\[Amendment\s+\d{4}\]$/.test(line)) out.push('<span class="amendTag">' + esc.replace(/[\[\]]/g,'') + '</span>');
+      else out.push('<p>' + esc + '</p>');
+    });
+    flush();
+    return out.join('');
+  }
+
+  function snippet(entry, query){
+    var body = plain(entry.content || '');
+    var lower = entry._searchBody;
+    var idx = query ? lower.indexOf(query.toLowerCase()) : -1;
+    var start, raw;
+    if(idx === -1){
+      raw = body.slice(0, 170);
+    } else {
+      start = Math.max(0, idx - 60);
+      raw = (start>0?'…':'') + body.slice(start, start+190);
+    }
+    raw = raw.replace(/\s+/g,' ').trim();
+    var esc = escapeHtml(raw);
+    if(query){
+      var re = new RegExp('('+escapeRe(query)+')','ig');
+      esc = esc.replace(re, '<mark>$1</mark>');
+    }
+    return esc + '…';
+  }
+
+  function partLabel(entry){
+    if(entry.kind === 'bylaw') return entry.partTitle || '';
+    if(entry.kind === 'schedule') return 'Source & notes';
+    if(entry.kind === 'form') return entry.formNo || '';
+    return '';
+  }
+  function crumbLabel(entry){
+    if(entry.kind === 'bylaw') return entry.num;
+    if(entry.kind === 'schedule') return 'Note';
+    if(entry.kind === 'form') return entry.formNo || '';
+    return '';
+  }
+  function badgeLabel(entry){
+    if(entry.kind === 'bylaw') return entry.num;
+    if(entry.kind === 'schedule') return entry.ordinalWord.toUpperCase();
+    if(entry.kind === 'form') return entry.formNo || '';
+    return '';
+  }
+
+  // ---------------- Rendering ----------------
+  var mainInner = document.getElementById('mainInner');
+  var currentId = null;
+
+  function markActiveSidebar(id){
+    var prev = sidebar.querySelector('.clauseItem.active');
+    if(prev) prev.classList.remove('active');
+    var next = sidebar.querySelector('.clauseItem[data-id="'+id+'"]');
+    if(next){
+      next.classList.add('active');
+      var group = next.closest('.partGroup');
+      if(group) group.classList.add('open');
+      next.scrollIntoView({block:'nearest'});
+    }
+  }
+
+  function siblingNav(entry){
+    if(entry.kind !== 'bylaw') return {prev:null, next:null};
+    var part = parts.filter(function(p){return p.code === entry.part;})[0];
+    if(!part) return {prev:null, next:null};
+    var i = part.bylawNums.indexOf(entry.num);
+    var prevNum = i>0 ? part.bylawNums[i-1] : null;
+    var nextNum = i<part.bylawNums.length-1 ? part.bylawNums[i+1] : null;
+    return {
+      prev: prevNum ? byId['bylaw-'+prevNum] : null,
+      next: nextNum ? byId['bylaw-'+nextNum] : null
+    };
+  }
+
+  function openEntry(id, opts){
+    opts = opts || {};
+    var entry = byId[id];
+    if(!entry) return;
+    currentId = id;
+    location.hash = id;
+    markActiveSidebar(id);
+
+    var crumb = '<a href="#" data-home>QLASSIC Navigator</a><span>/</span>';
+    if(entry.kind === 'bylaw') crumb += '<span>'+escapeHtml(entry.partTitle||'')+'</span>';
+    else if(entry.kind === 'form') crumb += '<a href="#" data-id="schedule-SECOND">Second Schedule</a>';
+    else crumb += '<span>Schedules</span>';
+
+    var badges = '<span class="pill">'+escapeHtml(partLabel(entry))+'</span>';
+    (entry.amendments||[]).forEach(function(y){
+      badges += '<span class="pill amend">'+escapeHtml(y)+'</span>';
+    });
+
+    var nav = siblingNav(entry);
+    var navHtml = '<div class="navFoot">';
+    navHtml += nav.prev
+      ? '<button type="button" class="prevBtn" data-id="'+nav.prev.id+'"><span class="lbl">&larr; Previous</span><span class="val">'+nav.prev.num+'. '+escapeHtml(nav.prev.title)+'</span></button>'
+      : '<span></span>';
+    navHtml += nav.next
+      ? '<button type="button" class="nextBtn next" data-id="'+nav.next.id+'"><span class="lbl">Next &rarr;</span><span class="val">'+nav.next.num+'. '+escapeHtml(nav.next.title)+'</span></button>'
+      : '<span></span>';
+    navHtml += '</div>';
+
+    mainInner.innerHTML =
+      '<div class="crumb">'+crumb+'</div>'+
+      '<article>'+
+        '<div class="clauseHead">'+
+          '<span class="badge num">'+escapeHtml(badgeLabel(entry))+'</span>'+
+          '<div style="flex:1;min-width:0;">'+
+            '<h2>'+escapeHtml(entry.title)+'</h2>'+
+            '<div class="clauseMeta">'+badges+
+              '<button class="copyBtn" type="button" id="copyLinkBtn"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6.5 9.5a2.5 2.5 0 010-3.54l2-2a2.5 2.5 0 013.54 3.54l-1 1M9.5 6.5a2.5 2.5 0 010 3.54l-2 2a2.5 2.5 0 01-3.54-3.54l1-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Copy link</button>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="clauseBody">'+ contentToHtml(entry.content, opts.highlight) +'</div>'+
+        navHtml+
+      '</article>';
+
+    document.getElementById('copyLinkBtn').addEventListener('click', function(){
+      var url = location.href.split('#')[0] + '#' + id;
+      try{
+        navigator.clipboard.writeText(url);
+        this.textContent = 'Copied';
+        var self = this;
+        setTimeout(function(){ self.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6.5 9.5a2.5 2.5 0 010-3.54l2-2a2.5 2.5 0 013.54 3.54l-1 1M9.5 6.5a2.5 2.5 0 010 3.54l-2 2a2.5 2.5 0 01-3.54-3.54l1-1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Copy link'; }, 1400);
+      }catch(e){}
+    });
+    mainInner.querySelectorAll('.prevBtn,.nextBtn').forEach(function(btn){
+      btn.addEventListener('click', function(){ openEntry(btn.getAttribute('data-id')); mainInner.scrollTop = 0; });
+    });
+    mainInner.querySelectorAll('.crumb a[data-id]').forEach(function(a){
+      a.addEventListener('click', function(ev){ ev.preventDefault(); openEntry(a.getAttribute('data-id')); });
+    });
+    var homeLink = mainInner.querySelector('.crumb a[data-home]');
+    if(homeLink) homeLink.addEventListener('click', function(ev){ ev.preventDefault(); showWelcome(); });
+
+    document.getElementById('main').scrollTop = 0;
+  }
+
+  // ---------------- Welcome screen ----------------
+  var EXAMPLES = ['FLOOR', 'DOOR', 'CEILING', 'ROOF', 'CARPARK'];
+
+  function showWelcome(){
+    currentId = null;
+    if(history.replaceState) history.replaceState(null, '', location.pathname + location.search);
+    var prevActive = sidebar.querySelector('.clauseItem.active');
+    if(prevActive) prevActive.classList.remove('active');
+
+    var chips = EXAMPLES.map(function(ex){ return '<button type="button" class="exampleChip" data-jump="'+escapeHtml(ex)+'">'+escapeHtml(ex)+'</button>'; }).join('');
+
+    mainInner.innerHTML =
+      '<div class="welcome">'+
+        '<h2>Look up any trade, requirement or tolerance.</h2>'+
+        '<p>Search every requirement in Annex A by keyword &mdash; lippage, warpage, hollowness, gaps &mdash; or type a trade code into &ldquo;Go to trade&rdquo; above to open its full table, the way you&rsquo;d flip to a page in the printed standard.</p>'+
+        '<div class="statRow">'+
+          '<div class="statCard"><div class="figure">'+bylaws.length+'</div><div class="cap">TRADES, ANNEX A</div></div>'+
+          '<div class="statCard"><div class="figure">5</div><div class="cap">DEFECT GROUPS PER TRADE</div></div>'+
+          '<div class="statCard"><div class="figure">'+((DATA.meta&&DATA.meta.parts)||2)+'</div><div class="cap">PARTS OF ANNEX A</div></div>'+
+        '</div>'+
+        '<p style="margin-bottom:8px;"><strong>Try a trade:</strong></p>'+
+        '<div class="exampleRow">'+chips+'</div>'+
+      '</div>';
+
+    mainInner.querySelectorAll('[data-jump]').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        document.getElementById('jumpInput').value = chip.getAttribute('data-jump');
+        doJump();
+      });
+    });
+  }
+
+  // ---------------- Search ----------------
+  var searchInput = document.getElementById('searchInput');
+  var searchClear = document.getElementById('searchClear');
+  var searchTimer = null;
+
+  searchInput.addEventListener('input', function(){
+    searchClear.style.display = searchInput.value ? 'flex' : 'none';
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(runSearch, 120);
+  });
+  searchClear.addEventListener('click', function(){
+    searchInput.value = '';
+    searchClear.style.display = 'none';
+    if(currentId) openEntry(currentId); else showWelcome();
+    searchInput.focus();
+  });
+
+  function runSearch(){
+    var q = searchInput.value.trim();
+    if(!q){ if(currentId) openEntry(currentId); else showWelcome(); return; }
+    var ql = q.toLowerCase();
+    currentId = null;
+    var prevActive = sidebar.querySelector('.clauseItem.active');
+    if(prevActive) prevActive.classList.remove('active');
+
+    var titleHits = [], bodyHits = [];
+    allEntries.forEach(function(e){
+      if(e._searchTitle.indexOf(ql) !== -1) titleHits.push(e);
+      else if(e._searchBody.indexOf(ql) !== -1) bodyHits.push(e);
+    });
+    var results = titleHits.concat(bodyHits).slice(0, 60);
+
+    var head = '<div class="resultsHead"><h2>Results for &ldquo;'+escapeHtml(q)+'&rdquo;</h2><span class="count">'+(titleHits.length+bodyHits.length)+' match'+((titleHits.length+bodyHits.length)===1?'':'es')+'</span></div>';
+    var body;
+    if(results.length === 0){
+      body = '<div class="noResults">No requirement in Annex A mentions &ldquo;'+escapeHtml(q)+'&rdquo;. Try a different term, or use &ldquo;Go to trade&rdquo; if you know the code.</div>';
+    } else {
+      body = results.map(function(e){
+        return '<a class="resultCard" href="#" data-id="'+e.id+'">'+
+          '<div class="rhead"><span class="rnum">'+escapeHtml(badgeLabel(e))+'</span><span class="rtitle">'+escapeHtml(e.title)+'</span><span class="rpart">'+escapeHtml(partLabel(e))+'</span></div>'+
+          '<div class="rsnippet">'+snippet(e, q)+'</div>'+
+        '</a>';
+      }).join('');
+    }
+    mainInner.innerHTML = head + body;
+    mainInner.querySelectorAll('.resultCard').forEach(function(card){
+      card.addEventListener('click', function(ev){
+        ev.preventDefault();
+        openEntry(card.getAttribute('data-id'), {highlight:q});
+      });
+    });
+    document.getElementById('main').scrollTop = 0;
+  }
+
+  // ---------------- Jump to clause ----------------
+  var jumpForm = document.getElementById('jumpForm');
+  var jumpInput = document.getElementById('jumpInput');
+
+  var scheduleWordMap = {};
+  schedules.forEach(function(s){
+    scheduleWordMap[s.ordinalWord.toLowerCase()] = s.id;
+    scheduleWordMap[s.key.toLowerCase()] = s.id;
+    scheduleWordMap[String(s.ordinal)] = s.id;
+  });
+
+  function normalizeJump(raw){
+    return raw.trim().toLowerCase()
+      .replace(/^by[\s-]?law\s*/,'')
+      .replace(/^(no\.?|clause|section|by-law|bylaw)\s*/,'')
+      .replace(/\.$/,'')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function doJump(){
+    var raw = jumpInput.value;
+    if(!raw.trim()) return;
+    var norm = normalizeJump(raw);
+
+    // Trade code or exact title, e.g. "DOOR", "ceiling"
+    if(jumpIndex[norm]){ searchInput.value=''; searchClear.style.display='none'; openEntry(jumpIndex[norm]); flashJump(true); return; }
+
+    // Form, e.g. "g7" / "form g7"
+    var formMatch = norm.replace(/^form\s*/,'').match(/^g\s*-?\s*(\d+[a-z]?)$/i);
+    if(formMatch){
+      var fid = 'form-G'+formMatch[1].toUpperCase();
+      if(byId[fid]){ searchInput.value=''; searchClear.style.display='none'; openEntry(fid); flashJump(true); return; }
+    }
+
+    // Schedule, e.g. "first schedule" / "first" / "schedule 1"
+    var schedMatch = norm.match(/^(?:schedule\s*)?([a-z]+|\d+)(?:\s*schedule)?$/);
+    if(schedMatch && scheduleWordMap[schedMatch[1]]){
+      searchInput.value=''; searchClear.style.display='none';
+      openEntry(scheduleWordMap[schedMatch[1]]); flashJump(true); return;
+    }
+
+    // Numeric clause code — QLASSIC has none, kept for shell parity
+    var byMatch = norm.replace(/\s+/g,'').match(/^(\d+)([a-z]?)$/i);
+    if(byMatch){
+      var num = byMatch[1] + byMatch[2].toUpperCase();
+      var bid = 'bylaw-'+num;
+      if(byId[bid]){ searchInput.value=''; searchClear.style.display='none'; openEntry(bid); flashJump(true); return; }
+    }
+
+    flashJump(false);
+  }
+
+  function flashJump(ok){
+    jumpInput.style.borderColor = ok ? 'var(--line-strong)' : 'var(--danger)';
+    jumpInput.style.color = ok ? '' : 'var(--danger)';
+    if(!ok){
+      jumpInput.setAttribute('title', 'No trade found for "'+jumpInput.value+'". Try a trade code (FLOOR, DOOR, ROOF).');
+      jumpInput.placeholder = 'not found — try FLOOR, DOOR, ROOF';
+      var old = jumpInput.value;
+      jumpInput.value='';
+      setTimeout(function(){ jumpInput.placeholder='e.g. DOOR'; jumpInput.style.borderColor=''; jumpInput.style.color=''; }, 2200);
+    }
+  }
+
+  jumpForm.addEventListener('submit', function(ev){ ev.preventDefault(); doJump(); });
+
+  // ---------------- Deep link / boot ----------------
+  function boot(){
+    var hash = location.hash.replace('#','');
+    if(hash && byId[hash]){ openEntry(hash); }
+    else { showWelcome(); }
+  }
+  window.addEventListener('hashchange', function(){
+    var hash = location.hash.replace('#','');
+    if(hash && byId[hash] && hash !== currentId) openEntry(hash);
+  });
+  boot();
+})();
+</script>
+</body>
+</html>
