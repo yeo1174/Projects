@@ -17,7 +17,7 @@
   --shadow:rgba(23,22,15,0.06); --shadow-lift:rgba(23,22,15,0.10);
   --mark:#F6D98A;
   --s1:#0052CC; --s2:#b26a00; --s3:#007a4d; --s4:#FF6B35; --s5:#6b4fa0;
-  --accent:var(--s1); --accent-ink:#ffffff;
+  --accent:var(--s1); --accent-hover:#266CD4; --accent-ink:#ffffff;
   --radius-s:8px; --radius-m:12px;
   color-scheme:light;
 }
@@ -28,6 +28,7 @@ html[data-theme="dark"]{
   --shadow:rgba(0,0,0,0.4); --shadow-lift:rgba(0,0,0,0.55);
   --mark:rgba(246,217,138,0.32);
   --s1:#7ea8ff; --s2:#ecb43a; --s3:#24c48d; --s4:#ff9a6e; --s5:#a88dff;
+  --accent:var(--s1); --accent-hover:#a9c4ff; --accent-ink:#0e1418;
   color-scheme:dark;
 }
 *{box-sizing:border-box;}
@@ -57,6 +58,16 @@ header .kicker{
 }
 header .kicker::before{content:''; width:26px; height:1px; background:var(--text-muted);}
 header h1{font-size:32px; font-weight:800; letter-spacing:-.03em; line-height:1.05; margin:0 0 8px;}
+.back-link{
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink);
+  font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  text-decoration:none; padding:6px 13px; border-radius:100px; white-space:nowrap;
+  margin-bottom:16px;
+  transition:background-color .18s ease,transform .18s ease,box-shadow .18s ease;
+}
+.back-link:hover{background:var(--accent-hover); transform:translateY(-2px); box-shadow:0 6px 18px var(--shadow-lift);}
+.back-link:active{transform:translateY(0); box-shadow:0 1px 3px var(--shadow);}
 header .sub{font-size:13px; color:var(--text-secondary); margin:0; max-width:64ch; line-height:1.55;}
 .side{display:flex; flex-direction:column; align-items:flex-end; gap:9px; padding-top:2px;}
 .theme-btn{
@@ -238,6 +249,7 @@ html:not(.js) .menuBtn{display:none;}
   <header class="top">
     <div class="head-inner">
       <button type="button" class="menuBtn" id="menuBtn">Sections</button>
+      <a class="back-link" href="/Projects/">&larr; Project Dashboard</a>
       <div class="head-row">
         <div class="head-main">
           <div class="kicker">Knowledge Library · PLANMalaysia@Selangor / LPHS</div>
