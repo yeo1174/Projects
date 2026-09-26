@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selangor Planning Guidelines — Q&amp;A Dashboard</title>
+<style>
+:root{
+  --surface:#f7f7f5; --surface-2:#efefec; --card:#ffffff; --text:#1a1a1a; --strong:#000;
+  --muted:#6b6b6b; --border:#e2e2de; --gridline:#e2e2de; --mark:#ffe58a;
+  --s1:#0052CC; --s2:#b26a00; --s3:#007a4d; --s4:#FF6B35; --s5:#6b4fa0;
+}
+body[data-theme="dark"]{
+  --surface:#14161b; --surface-2:#1b1e25; --card:#1e2128; --text:#e6e6e2; --strong:#ffffff;
+  --muted:#9aa0a6; --border:#2a2e37; --gridline:#2a2e37; --mark:#8a6d00;
+  --s1:#7ea8ff; --s2:#e0a860; --s3:#5fc48e; --s4:#ff8f66; --s5:#a98fd6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Libre Franklin',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 22px 34px;}
+header.top{border-bottom:1px solid var(--strong);padding-bottom:14px;margin-bottom:14px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+.kicker{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);}
+h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:4px;color:var(--strong);}
+.sub{font-size:12px;color:var(--muted);margin-top:4px;max-width:640px;}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.theme-btn{font:inherit;font-size:11px;padding:6px 12px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;border-radius:2px;}
+.theme-btn:hover{border-color:var(--muted);}
+.gen-date{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:10px;color:var(--muted);}
+.stat-row{display:flex;border:1px solid var(--gridline);background:var(--card);margin-bottom:14px;flex-wrap:wrap;}
+.stat{flex:1;min-width:110px;padding:12px 16px;border-left:1px solid var(--gridline);}
+.stat:first-child{border-left:none;}
+.stat .n{font-size:24px;font-weight:800;letter-spacing:-.03em;}
+.stat .l{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:4px;}
+.search-row{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.search-wrap{flex:1;position:relative;min-width:240px;}
+#search{width:100%;padding:11px 36px 11px 13px;border:1px solid var(--border);background:var(--card);color:var(--text);font:inherit;font-size:14px;outline:none;border-radius:2px;}
+#search:focus{border-color:var(--muted);}
+#clear{position:absolute;right:9px;top:50%;transform:translateY(-50%);border:none;background:none;font-size:17px;cursor:pointer;color:var(--muted);display:none;line-height:1;}
+#mc{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:11px;color:var(--muted);white-space:nowrap;}
+.examples{margin-bottom:16px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.ex-lbl{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-right:2px;}
+.ex{font:inherit;font-size:11px;padding:4px 10px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;border-radius:99px;}
+.ex:hover{color:var(--text);border-color:var(--muted);}
+#results{display:none;}
+.res-head{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:11px;color:var(--muted);margin:6px 0 12px;}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:780px){.res-grid{grid-template-columns:1fr;}}
+section.part{background:var(--card);border:1px solid var(--gridline);margin-bottom:12px;}
+.ph{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;user-select:none;flex-wrap:wrap;}
+.ph:hover{background:var(--surface-2);}
+.pnum{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:11px;font-weight:600;color:var(--card);background:var(--accent);padding:3px 8px;}
+.pt{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--strong);}
+.pm{font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:10px;color:var(--muted);}
+.pr{margin-left:auto;font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:10px;color:var(--muted);white-space:nowrap;}
+.ch{color:var(--muted);font-size:12px;transition:transform .18s;}
+section.collapsed .ch{transform:rotate(-90deg);}
+section.collapsed .grid{display:none;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:2px 14px 14px;}
+@media(max-width:780px){.grid{grid-template-columns:1fr;}}
+.qa{border-top:2px solid var(--accent);background:var(--surface);padding:11px 13px;display:flex;flex-direction:column;gap:6px;}
+.qa .chip{align-self:flex-start;font-family:ui-monospace,'IBM Plex Mono',Menlo,monospace;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:2px 7px;border-radius:2px;}
+.qa .q{font-size:12px;font-weight:600;color:var(--muted);line-height:1.4;}
+.qa .a{font-size:15.5px;font-weight:800;letter-spacing:-.01em;color:var(--strong);line-height:1.35;}
+.qa .more{font-size:11.5px;color:var(--muted);line-height:1.5;}
+mark{background:var(--mark);color:inherit;padding:0 1px;border-radius:1px;}
+.hidden{display:none !important;}
+#nr{display:none;padding:20px;text-align:center;color:var(--muted);font-size:13px;background:var(--card);border:1px dashed var(--border);margin-bottom:12px;}
+footer{margin-top:18px;padding-top:12px;border-top:1px solid var(--gridline);font-size:10.5px;color:var(--muted);line-height:1.7;}
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="kicker">Knowledge Library · PLANMalaysia@Selangor / LPHS</div>
+      <h1>Selangor Planning Guidelines</h1>
+      <div class="sub">Ask in plain language — every answer cites the guideline section · JPBD Edisi Kelima 2025 + LPHS circulars</div>
+    </div>
+    <div class="side">
+      <button type="button" class="theme-btn" id="themeBtn">Dark mode</button>
+      <div class="gen-date">26 Sep 2026</div>
+    </div>
+  </header>
+
+  <div class="stat-row"><div class="stat"><div class="n">5</div><div class="l">Sections</div></div><div class="stat"><div class="n">75</div><div class="l">Q&amp;As</div></div><div class="stat"><div class="n">6</div><div class="l">Source docs</div></div><div class="stat"><div class="n">2025</div><div class="l">Editions</div></div></div>
+
+  <div class="search-row">
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="Try: 'minimum lot size for terrace house' or 'setback for bungalow/cluster'…" autocomplete="off" aria-label="Search">
+      <button id="clear" title="Clear (Esc)" aria-label="Clear search">&times;</button>
+    </div>
+    <span id="mc"></span>
+  </div>
+  <div class="examples"><span class="ex-lbl">Try:</span><button type="button" class="ex" data-q="minimum lot size for terrace house">minimum lot size for terrace house</button><button type="button" class="ex" data-q="setback requirement for bungalow/cluster">setback requirement for bungalow/cluster</button><button type="button" class="ex" data-q="cul-de-sac for landed properties">cul-de-sac for landed properties</button><button type="button" class="ex" data-q="EVCB requirement">EVCB requirement</button><button type="button" class="ex" data-q="Selangorku price and income ceiling">Selangorku price and income ceiling</button><button type="button" class="ex" data-q="industrial buffer zone">industrial buffer zone</button></div>
+  <div id="nr"></div>
+  <div id="results"><div class="res-head" id="resHead"></div><div class="res-grid" id="resGrid"></div></div>
+  <div id="browse">
+<section class="part" id="housing" style="--accent:var(--s1)">
+  <div class="ph" role="button" tabindex="0" aria-expanded="true">
+    <span class="pnum">01</span>
+    <span class="pt">JPBD Housing Guidelines</span>
+    <span class="pm">Bahagian A + PR1–PR7 · Edisi Kelima 2025</span>
+    <span class="pr">23 Q&amp;As</span>
+    <span class="ch">&#9662;</span>
+  </div>
+  <div class="grid">
+    <article class="qa" data-text="minimum lot size for a terrace house (rumah teres)? 6.10 m x 18.29 m (20' x 60') min built-up floor area 74.32 m² (800 sf); minimum 3 bedrooms; max 3 storeys / 16.76 m (55'); floor-to-floor max 4.27 m (14'). pr1 · housing gp edisi kelima 2025 terrace teres lot size saiz lot 20x60 minimum minimum lot size rumah teres requirement" data-tags="terrace teres lot size saiz lot 20x60 minimum minimum lot size rumah teres requirement">
+      <div class="chip">PR1 · Housing GP Edisi Kelima 2025</div>
+      <div class="q">Minimum lot size for a terrace house (rumah teres)?</div>
+      <div class="a">6.10 m × 18.29 m (20' x 60')</div>
+      <div class="more">Min built-up floor area 74.32 m² (800 sf); minimum 3 bedrooms; max 3 storeys / 16.76 m (55'); floor-to-floor max 4.27 m (14').</div>
+    </article>
+    <article class="qa" data-text="setback requirements for a terrace house? front 6.10 m (20') · corner side 6.10 m · car porch column to boundary 3.05 m (10') rear lane 4.57 m (15'); separator lane between blocks 6.10 m — property break not allowed; corner cut 4.57 x 4.57 m; service road min 15.24 m (50'). pr1 · housing gp setback anjakan terrace teres requirement requirements front corner side rear lane separator" data-tags="setback anjakan terrace teres requirement requirements front corner side rear lane separator">
+      <div class="chip">PR1 · Housing GP</div>
+      <div class="q">Setback requirements for a terrace house?</div>
+      <div class="a">Front 6.10 m (20') · Corner side 6.10 m · Car porch column to boundary 3.05 m (10')</div>
+      <div class="more">Rear lane 4.57 m (15'); separator lane between blocks 6.10 m — property break NOT allowed; corner cut 4.57 x 4.57 m; service road min 15.24 m (50').</div>
+    </article>
+    <article class="qa" data-text="maximum height, storeys and block length for terrace houses? max 3 storeys, 16.76 m (55') · block length max 97.54 m (320') measured from access road level to roof; floor-to-floor max 4.27 m; service road min 15.24 m; rear lane 4.57 m; separator lane 6.10 m no property break. pr1 · housing gp height storey storeys tingkat ketinggian block length panjang blok teres" data-tags="height storey storeys tingkat ketinggian block length panjang blok teres">
+      <div class="chip">PR1 · Housing GP</div>
+      <div class="q">Maximum height, storeys and block length for terrace houses?</div>
+      <div class="a">Max 3 storeys, 16.76 m (55') · Block length max 97.54 m (320')</div>
+      <div class="more">Measured from access road level to roof; floor-to-floor max 4.27 m; service road min 15.24 m; rear lane 4.57 m; separator lane 6.10 m no property break.</div>
+    </article>
+    <article class="qa" data-text="cul-de-sac (jalan buntu) limits for landed housing? terrace: max 97.54 m (320') · semi-d / cluster / bungalow: max 304.80 m (1,000') turning head min 15.24 x 15.24 m (50' x 50'); radius 7.62 m (25'). applies to pr1, pr2, pr3 landed schemes. pr1 · pr2 · pr3 · housing gp cul-de-sac cul de sac jalan buntu landed dead end turning head radius requirement" data-tags="cul-de-sac cul de sac jalan buntu landed dead end turning head radius requirement">
+      <div class="chip">PR1 · PR2 · PR3 · Housing GP</div>
+      <div class="q">Cul-de-sac (jalan buntu) limits for landed housing?</div>
+      <div class="a">Terrace: max 97.54 m (320') · Semi-D / cluster / bungalow: max 304.80 m (1,000')</div>
+      <div class="more">Turning head min 15.24 x 15.24 m (50' x 50'); radius 7.62 m (25'). Applies to PR1, PR2, PR3 landed schemes.</div>
+    </article>
+    <article class="qa" data-text="minimum lot size for semi-detached (berkembar) and cluster houses? semi-d 9.14 x 18.29 m (30' x 60') · cluster 10.67 x 19.81 m (35' x 65') cluster = 4 units per cluster sharing rear walls. min floor area 74.32 m² / 81.29 m² (875 sf); 3 bedrooms; max 3 storeys / 16.76 m. pr2 · housing gp semi-d semi detached berkembar cluster kluster lot size saiz lot minimum requirement" data-tags="semi-d semi detached berkembar cluster kluster lot size saiz lot minimum requirement">
+      <div class="chip">PR2 · Housing GP</div>
+      <div class="q">Minimum lot size for semi-detached (berkembar) and cluster houses?</div>
+      <div class="a">Semi-D 9.14 × 18.29 m (30' x 60') · Cluster 10.67 × 19.81 m (35' x 65')</div>
+      <div class="more">Cluster = 4 units per cluster sharing rear walls. Min floor area 74.32 m² / 81.29 m² (875 sf); 3 bedrooms; max 3 storeys / 16.76 m.</div>
+    </article>
+    <article class="qa" data-text="setback for semi-d and cluster houses? front 6.10 m (20') · corner 6.10 m · end-lot side 3.05 m (10') cul-de-sac up to 304.80 m (1,000'); pedestrian path 1.83 m (6') encouraged on both sides of the front; car porch column 3.05 m. pr2 · housing gp setback anjakan semi-d berkembar cluster kluster requirement requirements end lot corner" data-tags="setback anjakan semi-d berkembar cluster kluster requirement requirements end lot corner">
+      <div class="chip">PR2 · Housing GP</div>
+      <div class="q">Setback for semi-D and cluster houses?</div>
+      <div class="a">Front 6.10 m (20') · Corner 6.10 m · End-lot side 3.05 m (10')</div>
+      <div class="more">Cul-de-sac up to 304.80 m (1,000'); pedestrian path 1.83 m (6') encouraged on both sides of the front; car porch column 3.05 m.</div>
+    </article>
+    <article class="qa" data-text="minimum lot size and setbacks for a bungalow (sesebuah)? lot 15.24 x 22.86 m (50' x 75') · front 6.10 m · rear 3.05 m · side 3.05 m · corner 6.10 m min floor area 125.42 m² (1,350 sf); 3 bedrooms; max 3 storeys / 16.76 m; car porch column to boundary 3.05 m; cul-de-sac up to 304.80 m. pr3 · housing gp bungalow sesebuah detached rumah lot size setback anjakan requirement requirements 50x75" data-tags="bungalow sesebuah detached rumah lot size setback anjakan requirement requirements 50x75">
+      <div class="chip">PR3 · Housing GP</div>
+      <div class="q">Minimum lot size and setbacks for a bungalow (sesebuah)?</div>
+      <div class="a">Lot 15.24 × 22.86 m (50' x 75') · Front 6.10 m · Rear 3.05 m · Side 3.05 m · Corner 6.10 m</div>
+      <div class="more">Min floor area 125.42 m² (1,350 sf); 3 bedrooms; max 3 storeys / 16.76 m; car porch column to boundary 3.05 m; cul-de-sac up to 304.80 m.</div>
+    </article>
+    <article class="qa" data-text="strata landed housing (strata bertanah) minimum requirements? min 50 units · 1 lot / 2 owners · max 4 storeys / 21.34 m (70') · lot 6.10 x 18.29 m access opening min 20.12 m (66') with 2 entries/exits; min floor area 74.32 m² (800 sf); floor-to-floor max 4.27 m; block max 97.54 m. pr4 · housing gp strata bertanah landed minimum units storey requirement" data-tags="strata bertanah landed minimum units storey requirement">
+      <div class="chip">PR4 · Housing GP</div>
+      <div class="q">Strata landed housing (strata bertanah) minimum requirements?</div>
+      <div class="a">Min 50 units · 1 lot / 2 owners · Max 4 storeys / 21.34 m (70') · Lot 6.10 × 18.29 m</div>
+      <div class="more">Access opening min 20.12 m (66') with 2 entries/exits; min floor area 74.32 m² (800 sf); floor-to-floor max 4.27 m; block max 97.54 m.</div>
+    </article>
+    <article class="qa" data-text="internal roads and fencing for strata landed schemes? road 12.19 m (1-way) / 15.24 m (2-way) incl. reserve · fence max 2.74 m (9') with min 33% open fence must remain visible from outside. parking 2 tlk/unit + 20% visitor; oku bays 2% with ramp; visitor parking within guarded area. pr4 · housing gp strata bertanah road jalan dalaman fence pagar tembok height tinggi parking tlk" data-tags="strata bertanah road jalan dalaman fence pagar tembok height tinggi parking tlk">
+      <div class="chip">PR4 · Housing GP</div>
+      <div class="q">Internal roads and fencing for strata landed schemes?</div>
+      <div class="a">Road 12.19 m (1-way) / 15.24 m (2-way) incl. reserve · Fence max 2.74 m (9') with min 33% open</div>
+      <div class="more">Fence must remain visible from outside. Parking 2 TLK/unit + 20% visitor; OKU bays 2% with ramp; visitor parking within guarded area.</div>
+    </article>
+    <article class="qa" data-text="shared facilities for strata landed schemes (pr4)? tadika/taska 55.74–74.32 m² by unit count · surau 46.45–55.74 m² · office 46.45 m² · dewan 92.90–185.81 m² &gt;400 units: tadika and surau +0.186 m² per additional unit. guardhouse min 46.45 m² (500 sf). pr4 · housing gp strata facilities kemudahan tadika taska surau dewan office pejabat guardhouse size" data-tags="strata facilities kemudahan tadika taska surau dewan office pejabat guardhouse size">
+      <div class="chip">PR4 · Housing GP</div>
+      <div class="q">Shared facilities for strata landed schemes (PR4)?</div>
+      <div class="a">Tadika/taska 55.74–74.32 m² by unit count · Surau 46.45–55.74 m² · Office 46.45 m² · Dewan 92.90–185.81 m²</div>
+      <div class="more">&gt;400 units: tadika and surau +0.186 m² per additional unit. Guardhouse min 46.45 m² (500 sf).</div>
+    </article>
+    <article class="qa" data-text="rumah kluster berkembar (pr5) requirements? 8 units per cluster · 1 lot / 2 owners · 2 storeys / 15.24 m (50') max corner lot 13.72 x 14.02 m (45' x 46'), intermediate 4.88–6.10 x 16.76–18.90 m; floor area 84.54–86.96 m² (910–936 sf); private garden for all units; new type in 5th ed. pr5 · housing gp 2025 (new) kluster berkembar cluster strata lot size requirement new 5th edition" data-tags="kluster berkembar cluster strata lot size requirement new 5th edition">
+      <div class="chip">PR5 · Housing GP 2025 (new)</div>
+      <div class="q">Rumah Kluster Berkembar (PR5) requirements?</div>
+      <div class="a">8 units per cluster · 1 lot / 2 owners · 2 storeys / 15.24 m (50') max</div>
+      <div class="more">Corner lot 13.72 × 14.02 m (45' x 46'), intermediate 4.88–6.10 × 16.76–18.90 m; floor area 84.54–86.96 m² (910–936 sf); private garden for all units; new type in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="apartment / condominium maximum density (harga bebas)? 80 units/acre (bandaraya &amp; perbandaran) · 60 units/acre (daerah) plinth max 60% of site; min floor area 60.39 m² (650 sf); min 3 bedrooms not required — per unit type table. pr6 · housing gp apartment pangsapuri condominium kondo density densiti units per acre maximum" data-tags="apartment pangsapuri condominium kondo density densiti units per acre maximum">
+      <div class="chip">PR6 · Housing GP</div>
+      <div class="q">Apartment / condominium maximum density (harga bebas)?</div>
+      <div class="a">80 units/acre (bandaraya &amp; perbandaran) · 60 units/acre (daerah)</div>
+      <div class="more">Plinth max 60% of site; min floor area 60.39 m² (650 sf); min 3 bedrooms not required — per unit type table.</div>
+    </article>
+    <article class="qa" data-text="apartment height limits — storeys and podium? max 5 storeys without lift · podium max 8 storeys from access road level ground level priority: oku units, warga emas, tadika/taska, surau. service road 20.12 m (66'); exit road 15.24 m; internal road 6.10 m (1-way) / 7.32 m (2-way). pr6 · housing gp apartment storey storeys tingkat podium lift height ketinggian maximum" data-tags="apartment storey storeys tingkat podium lift height ketinggian maximum">
+      <div class="chip">PR6 · Housing GP</div>
+      <div class="q">Apartment height limits — storeys and podium?</div>
+      <div class="a">Max 5 storeys without lift · Podium max 8 storeys from access road level</div>
+      <div class="more">Ground level priority: OKU units, warga emas, tadika/taska, surau. Service road 20.12 m (66'); exit road 15.24 m; internal road 6.10 m (1-way) / 7.32 m (2-way).</div>
+    </article>
+    <article class="qa" data-text="building separation between apartment blocks? front–front 24.38 m (80') · side–front / side–rear / rear–rear 12.19 m · side–side 9.14 m (30') facing public road 12.19 m; building to boundary 6.10 m; basement 3.05 m. no balcony or ramp within the setback zone. pr6 · housing gp apartment building separation anjakan antara bangunan setback between blocks" data-tags="apartment building separation anjakan antara bangunan setback between blocks">
+      <div class="chip">PR6 · Housing GP</div>
+      <div class="q">Building separation between apartment blocks?</div>
+      <div class="a">Front–front 24.38 m (80') · Side–front / side–rear / rear–rear 12.19 m · Side–side 9.14 m (30')</div>
+      <div class="more">Facing public road 12.19 m; building to boundary 6.10 m; basement 3.05 m. No balcony or ramp within the setback zone.</div>
+    </article>
+    <article class="qa" data-text="parking requirement for apartments / condominiums? 2 tlk per unit + 20% visitor · tlm 20% of tlk · oku 2% with ramp tandem parking allowed per gp infrastruktur. evcb mandatory if &gt;50 units: min 1% of tlk incl. 1 oku-accessible bay. pr6 · housing gp apartment parking tlk tlm visitor oku evcb ev charging tandem requirement" data-tags="apartment parking tlk tlm visitor oku evcb ev charging tandem requirement">
+      <div class="chip">PR6 · Housing GP</div>
+      <div class="q">Parking requirement for apartments / condominiums?</div>
+      <div class="a">2 TLK per unit + 20% visitor · TLM 20% of TLK · OKU 2% with ramp</div>
+      <div class="more">Tandem parking allowed per GP Infrastruktur. EVCB mandatory if &gt;50 units: min 1% of TLK incl. 1 OKU-accessible bay.</div>
+    </article>
+    <article class="qa" data-text="community facilities for apartments (pr6)? tadika/taska: 200 units = 55.74 m², 250–400 = 74.32 m², &gt;400 = +0.186 m²/unit · surau 46.45–55.74 m² · warga emas room 72.46–232.26 m² jenazah room beside surau; non-islamic prayer ≥50 units 7.43 m², &gt;400 units meditation room 46.45 m²; mail bay min 2.13 m wide; management office 46.45 m²; dewan 92.90–185.81 m². pr6 · housing gp apartment facilities kemudahan tadika surau warga emas dewan mail peti surat meditation" data-tags="apartment facilities kemudahan tadika surau warga emas dewan mail peti surat meditation">
+      <div class="chip">PR6 · Housing GP</div>
+      <div class="q">Community facilities for apartments (PR6)?</div>
+      <div class="a">Tadika/taska: 200 units = 55.74 m², 250–400 = 74.32 m², &gt;400 = +0.186 m²/unit · Surau 46.45–55.74 m² · Warga emas room 72.46–232.26 m²</div>
+      <div class="more">Jenazah room beside surau; non-Islamic prayer ≥50 units 7.43 m², &gt;400 units meditation room 46.45 m²; mail bay min 2.13 m wide; management office 46.45 m²; dewan 92.90–185.81 m².</div>
+    </article>
+    <article class="qa" data-text="open space (tanah lapang) requirement for housing? 10% of land (≥50 units or ≥5 acres) · 5% (&lt;50 units) — whichever is higher min 70% active recreation; ≥50% of that on flat open ground, centred; up to 50% may be inside building (podium/roof); max 30% non-recreation (planting, buffer, pond, utility). bahagian a 6.1 · also pr6/pr7 open space tanah lapang rekreasi percentage peratus requirement active recreation" data-tags="open space tanah lapang rekreasi percentage peratus requirement active recreation">
+      <div class="chip">Bahagian A 6.1 · also PR6/PR7</div>
+      <div class="q">Open space (tanah lapang) requirement for housing?</div>
+      <div class="a">10% of land (≥50 units or ≥5 acres) · 5% (&lt;50 units) — whichever is higher</div>
+      <div class="more">Min 70% active recreation; ≥50% of that on flat open ground, centred; up to 50% may be inside building (podium/roof); max 30% non-recreation (planting, buffer, pond, utility).</div>
+    </article>
+    <article class="qa" data-text="guardhouse (pondok pengawal) standards? landed: max 1.83 x 2.44 m (6' x 8'), set back ≥6.10 m (20') from road, barrier clearance ≥4.57 m (15') strata: may integrate with main building / open roof; combine with water meter, tnb meter, refuse chamber. industrial mip guardhouse same size (ind7). bahagian a 6.2 · ind7 guardhouse guard house pondok pengawal size setback barrier security" data-tags="guardhouse guard house pondok pengawal size setback barrier security">
+      <div class="chip">Bahagian A 6.2 · IND7</div>
+      <div class="q">Guardhouse (pondok pengawal) standards?</div>
+      <div class="a">Landed: max 1.83 × 2.44 m (6' x 8'), set back ≥6.10 m (20') from road, barrier clearance ≥4.57 m (15')</div>
+      <div class="more">Strata: may integrate with main building / open roof; combine with water meter, TNB meter, refuse chamber. Industrial MIP guardhouse same size (IND7).</div>
+    </article>
+    <article class="qa" data-text="perimeter planting widths? 3.05 m (10') facing main road · 1.52 m (5') shared boundary width counts within the building setback. developments &gt;1 acre; &lt;1 acre: 1.52 m all around. only 30% of perimeter planting counts toward open space. bahagian a 6.3 · gen-l commercial perimeter planting tanaman sempadan width lebar requirement landscape" data-tags="perimeter planting tanaman sempadan width lebar requirement landscape">
+      <div class="chip">Bahagian A 6.3 · GEN-L commercial</div>
+      <div class="q">Perimeter planting widths?</div>
+      <div class="a">3.05 m (10') facing main road · 1.52 m (5') shared boundary</div>
+      <div class="more">Width counts within the building setback. Developments &gt;1 acre; &lt;1 acre: 1.52 m all around. Only 30% of perimeter planting counts toward open space.</div>
+    </article>
+    <article class="qa" data-text="community facilities provision — landed vs strata? landed: site reserve (rizab tapak) · strata: integrated building space per garis panduan kemudahan masyarakat negeri selangor (km2-4-gp). bahagian a 6.4 · housing gp community facilities kemudahan masyarakat landed strata provision" data-tags="community facilities kemudahan masyarakat landed strata provision">
+      <div class="chip">Bahagian A 6.4 · Housing GP</div>
+      <div class="q">Community facilities provision — landed vs strata?</div>
+      <div class="a">Landed: site reserve (rizab tapak) · Strata: integrated building space</div>
+      <div class="more">Per Garis Panduan Kemudahan Masyarakat Negeri Selangor (KM2-4-GP).</div>
+    </article>
+    <article class="qa" data-text="housing type definitions? teres: row ≥3 units, shared walls · berkembar: 2 units, one shared wall · kluster: 4 units/cluster · kluster berkembar: 8 units · sesebuah: standalone · bandar: ≤4 storeys strata pangsapuri/kondominium: complete stacked units with facilities. strata: parcels + accessory parcels + common property (sma 2013). bahagian a 5.2 · housing gp definition definisi type jenis teres berkembar kluster sesebuah bandar pangsapuri strata" data-tags="definition definisi type jenis teres berkembar kluster sesebuah bandar pangsapuri strata">
+      <div class="chip">Bahagian A 5.2 · Housing GP</div>
+      <div class="q">Housing type definitions?</div>
+      <div class="a">Teres: row ≥3 units, shared walls · Berkembar: 2 units, one shared wall · Kluster: 4 units/cluster · Kluster Berkembar: 8 units · Sesebuah: standalone · Bandar: ≤4 storeys strata</div>
+      <div class="more">Pangsapuri/kondominium: complete stacked units with facilities. Strata: parcels + accessory parcels + common property (SMA 2013).</div>
+    </article>
+    <article class="qa" data-text="rumah selangorku terrace and rumah bandar (pr7) standards? teres: as pr1 · rumah bandar strata: max 4 storeys / 21.34 m (70'), 1 lot / 2 owners 3 bedrooms min; separator lane 6.10 m no property break; block max 97.54 m; service road 15.24 m; lot size per dasar rsku 3.0. pr7 · housing gp selangorku teres terrace bandar townhouse strata requirement" data-tags="selangorku teres terrace bandar townhouse strata requirement">
+      <div class="chip">PR7 · Housing GP</div>
+      <div class="q">Rumah Selangorku terrace and rumah bandar (PR7) standards?</div>
+      <div class="a">Teres: as PR1 · Rumah Bandar strata: max 4 storeys / 21.34 m (70'), 1 lot / 2 owners</div>
+      <div class="more">3 bedrooms min; separator lane 6.10 m no property break; block max 97.54 m; service road 15.24 m; lot size per Dasar RSku 3.0.</div>
+    </article>
+    <article class="qa" data-text="selangorku apartment density and parking (pr7)? density 120 units/acre (selangorku only, all zones) · 90 u/a mixed with free market (5–10 ac) parking: solo/duo/trio 1 tlk/unit + 20% visitor; quad 2 tlk + 10%; tlm 1 per 2 units; evcb mandatory &gt;50 units, 1% tlk. pr7 · housing gp selangorku apartment density densiti parking tlk visitor requirement" data-tags="selangorku apartment density densiti parking tlk visitor requirement">
+      <div class="chip">PR7 · Housing GP</div>
+      <div class="q">Selangorku apartment density and parking (PR7)?</div>
+      <div class="a">Density 120 units/acre (Selangorku only, all zones) · 90 u/a mixed with free market (5–10 ac)</div>
+      <div class="more">Parking: Solo/Duo/Trio 1 TLK/unit + 20% visitor; Quad 2 TLK + 10%; TLM 1 per 2 units; EVCB mandatory &gt;50 units, 1% TLK.</div>
+    </article>
+  </div>
+</section>
+<section class="part" id="commercial" style="--accent:var(--s2)">
+  <div class="ph" role="button" tabindex="0" aria-expanded="true">
+    <span class="pnum">02</span>
+    <span class="pt">JPBD Commercial Planning Guidelines</span>
+    <span class="pm">PN1–PN20 · Edisi Kelima 2025</span>
+    <span class="pr">21 Q&amp;As</span>
+    <span class="ch">&#9662;</span>
+  </div>
+  <div class="grid">
+    <article class="qa" data-text="shop house (kedai teres) minimum lot size and block length? lot 6.10 x 18.29 m (20' x 60') · max block 54.86 m (180') · max 5 storeys block length cut from 320' in the 4th ed. verandah way 1.52 m (5'). second staircase required from 3 storeys. pn1 · commercial gp 2025 shop shophouse shoplot kedai teres lot size block length requirement" data-tags="shop shophouse shoplot kedai teres lot size block length requirement">
+      <div class="chip">PN1 · Commercial GP 2025</div>
+      <div class="q">Shop house (kedai teres) minimum lot size and block length?</div>
+      <div class="a">Lot 6.10 × 18.29 m (20' x 60') · Max block 54.86 m (180') · Max 5 storeys</div>
+      <div class="more">Block length cut from 320' in the 4th Ed. Verandah way 1.52 m (5'). Second staircase required from 3 storeys.</div>
+    </article>
+    <article class="qa" data-text="service road and rear lanes for shop blocks? service road 15.24 m (1–2 storeys) / 20.12 m (3–5 storeys) · shop rear lane 6.10 m / 9.14 m residential rear lane 4.57 m; 1.50 m separating wall between shop and residential rear lanes; tkl parallel to 30' rear lane allowed. pn1 · commercial gp shop service road jalan perkhidmatan rear lane lorong belakang width" data-tags="shop service road jalan perkhidmatan rear lane lorong belakang width">
+      <div class="chip">PN1 · Commercial GP</div>
+      <div class="q">Service road and rear lanes for shop blocks?</div>
+      <div class="a">Service road 15.24 m (1–2 storeys) / 20.12 m (3–5 storeys) · Shop rear lane 6.10 m / 9.14 m</div>
+      <div class="more">Residential rear lane 4.57 m; 1.50 m separating wall between shop and residential rear lanes; TKL parallel to 30' rear lane allowed.</div>
+    </article>
+    <article class="qa" data-text="affordable shophouse (kedai teres mampu milik)? min floor area 65.03 m² (700 sf) / unit · max block 97.54 m (320') · max 3 storeys verandah way 1.52 m; parking as pn1; quota subject to selangor state policy and circulars. pn2 · commercial gp affordable mampu milik shophouse kedai teres floor area requirement" data-tags="affordable mampu milik shophouse kedai teres floor area requirement">
+      <div class="chip">PN2 · Commercial GP</div>
+      <div class="q">Affordable shophouse (kedai teres mampu milik)?</div>
+      <div class="a">Min floor area 65.03 m² (700 sf) / unit · Max block 97.54 m (320') · Max 3 storeys</div>
+      <div class="more">Verandah way 1.52 m; parking as PN1; quota subject to Selangor state policy and circulars.</div>
+    </article>
+    <article class="qa" data-text="twin shop / individual shop (kedai berkembar / sesebuah) lot sizes? berkembar 18.29 x 39.64 m (60' x 130') · sesebuah 27.43 x 39.62 m (90' x 130') service road 20.12 m; front setback 12.19 m; side/back 6.10 m; max 5 storeys; separate loading bay; centralised landscaped waste collection. pn3 · commercial gp twin shop berkembar sesebuah individual kedai lot size requirement" data-tags="twin shop berkembar sesebuah individual kedai lot size requirement">
+      <div class="chip">PN3 · Commercial GP</div>
+      <div class="q">Twin shop / individual shop (kedai berkembar / sesebuah) lot sizes?</div>
+      <div class="a">Berkembar 18.29 × 39.64 m (60' x 130') · Sesebuah 27.43 × 39.62 m (90' x 130')</div>
+      <div class="more">Service road 20.12 m; front setback 12.19 m; side/back 6.10 m; max 5 storeys; separate loading bay; centralised landscaped waste collection.</div>
+    </article>
+    <article class="qa" data-text="commercial setbacks (general)? front 12.19 m (40') · side &amp; rear 6.10 m (20') · basement 3.05 m (10') service road min 15.24 m two-way with min 2 exits, no cul-de-sac; slip road min 15 m; access not directly onto roads with ≥20 m reserve. bahagian a · commercial gp 2025 commercial setback anjakan front side rear basement requirement requirements general" data-tags="commercial setback anjakan front side rear basement requirement requirements general">
+      <div class="chip">Bahagian A · Commercial GP 2025</div>
+      <div class="q">Commercial setbacks (general)?</div>
+      <div class="a">Front 12.19 m (40') · Side &amp; rear 6.10 m (20') · Basement 3.05 m (10')</div>
+      <div class="more">Service road min 15.24 m two-way with min 2 exits, no cul-de-sac; slip road min 15 m; access not directly onto roads with ≥20 m reserve.</div>
+    </article>
+    <article class="qa" data-text="commercial parking rates (tlk / tlm)? tlk 1 per 46.45 m² (500 sf) net floor + 20% visitor · tlm 1 per 92.90 m² (1,000 sf) tlkw (women) 2% of tlk; tlk oku 2% near entrance/lift with ramp; e-hailing bays 10% of tlm, clearly marked and accessible. bahagian a · all pn types commercial parking tlk tlm rate visitor oku women tlkw e-hailing ehailing requirement" data-tags="commercial parking tlk tlm rate visitor oku women tlkw e-hailing ehailing requirement">
+      <div class="chip">Bahagian A · all PN types</div>
+      <div class="q">Commercial parking rates (TLK / TLM)?</div>
+      <div class="a">TLK 1 per 46.45 m² (500 sf) net floor + 20% visitor · TLM 1 per 92.90 m² (1,000 sf)</div>
+      <div class="more">TLKW (women) 2% of TLK; TLK OKU 2% near entrance/lift with ramp; e-hailing bays 10% of TLM, clearly marked and accessible.</div>
+    </article>
+    <article class="qa" data-text="evcb (ev charging bays) requirement for commercial developments? mandatory if &gt;50 tlk · min 1% of tlk · min 1 oku-accessible unit applies across all pn types. tandem parking allowed subject to gp infrastruktur negeri selangor. bahagian a · all pn types evcb ev charging bay electric vehicle requirement mandatory" data-tags="evcb ev charging bay electric vehicle requirement mandatory">
+      <div class="chip">Bahagian A · all PN types</div>
+      <div class="q">EVCB (EV charging bays) requirement for commercial developments?</div>
+      <div class="a">Mandatory if &gt;50 TLK · Min 1% of TLK · Min 1 OKU-accessible unit</div>
+      <div class="more">Applies across all PN types. Tandem parking allowed subject to GP Infrastruktur Negeri Selangor.</div>
+    </article>
+    <article class="qa" data-text="hotel parking requirement? tlk 1 per 3 hotel rooms · tlb (bus) 1 per 100 rooms + drop-off layby support spaces per commercial floor area; plinth max 60%; front setback 12.19 m; in-site drop-off for bus, taxi, e-hailing. pn6 · commercial gp hotel parking tlk rooms bilik tlb bus layby requirement" data-tags="hotel parking tlk rooms bilik tlb bus layby requirement">
+      <div class="chip">PN6 · Commercial GP</div>
+      <div class="q">Hotel parking requirement?</div>
+      <div class="a">TLK 1 per 3 hotel rooms · TLB (bus) 1 per 100 rooms + drop-off layby</div>
+      <div class="more">Support spaces per commercial floor area; plinth max 60%; front setback 12.19 m; in-site drop-off for bus, taxi, e-hailing.</div>
+    </article>
+    <article class="qa" data-text="hypermarket / supermarket minimum site and retail mix? min site 1.8 ha (4.5 acres) · hypermarket floor &gt;5,000 m² · support retail 40–80% · warehouse ≥10% halal/non-halal separation for loading, waste, cold storage; medan selera 5% of net floor; trolley storage inside building + parking areas. pn7 · commercial gp hypermarket supermarket pasar raya departmental site area retail warehouse requirement" data-tags="hypermarket supermarket pasar raya departmental site area retail warehouse requirement">
+      <div class="chip">PN7 · Commercial GP</div>
+      <div class="q">Hypermarket / supermarket minimum site and retail mix?</div>
+      <div class="a">Min site 1.8 ha (4.5 acres) · Hypermarket floor &gt;5,000 m² · Support retail 40–80% · Warehouse ≥10%</div>
+      <div class="more">Halal/non-halal separation for loading, waste, cold storage; medan selera 5% of net floor; trolley storage inside building + parking areas.</div>
+    </article>
+    <article class="qa" data-text="petrol station (stesen minyak) requirements? site 0.40 ha (with service) / 0.20 ha (self-service) · min 60.96 m (200') from junction evcb min 2 bays (1 oku); fuel tank setback 3.05 m; ngv 200 m from housing; ingress/egress 15.24 m / 9.14 m; corner cut ≤45°; no station opposite unless road divided. pn8 · commercial gp petrol station stesen minyak site area junction distance requirement" data-tags="petrol station stesen minyak site area junction distance requirement">
+      <div class="chip">PN8 · Commercial GP</div>
+      <div class="q">Petrol station (stesen minyak) requirements?</div>
+      <div class="a">Site 0.40 ha (with service) / 0.20 ha (self-service) · Min 60.96 m (200') from junction</div>
+      <div class="more">EVCB min 2 bays (1 OKU); fuel tank setback 3.05 m; NGV 200 m from housing; ingress/egress 15.24 m / 9.14 m; corner cut ≤45°; no station opposite unless road divided.</div>
+    </article>
+    <article class="qa" data-text="soho requirements? floor 41.81–51.10 m² (450–550 sf), max 2 occupants/unit · tlk 1/unit + 40% visitor podium max 8 storeys; open space 5% (≤1.21 ha) / 10% (&gt;1.21 ha); support retail ≥8% of net floor; tlm 20% of tlk; not in low-density residential areas. pn12 · commercial gp soho small office home office floor area parking requirement" data-tags="soho small office home office floor area parking requirement">
+      <div class="chip">PN12 · Commercial GP</div>
+      <div class="q">SOHO requirements?</div>
+      <div class="a">Floor 41.81–51.10 m² (450–550 sf), max 2 occupants/unit · TLK 1/unit + 40% visitor</div>
+      <div class="more">Podium max 8 storeys; open space 5% (≤1.21 ha) / 10% (&gt;1.21 ha); support retail ≥8% of net floor; TLM 20% of TLK; not in low-density residential areas.</div>
+    </article>
+    <article class="qa" data-text="serviced apartment (pangsapuri perkhidmatan) requirements? floor &gt;51.10 m² (550 sf) · tlk 2/unit + 20% visitor (51.10–92.90 m²), +1 tlk per extra 46.45 m² max occupants 3–4 by size; podium 8 storeys; plinth 60%; meditation room &gt;400 units (46.45 m²); commercial space ≥8%; evcb &gt;50 units; tandem allowed. pn13 · commercial gp (new 5th ed) serviced apartment pangsapuri perkhidmatan parking floor area requirement new" data-tags="serviced apartment pangsapuri perkhidmatan parking floor area requirement new">
+      <div class="chip">PN13 · Commercial GP (new 5th Ed)</div>
+      <div class="q">Serviced apartment (pangsapuri perkhidmatan) requirements?</div>
+      <div class="a">Floor &gt;51.10 m² (550 sf) · TLK 2/unit + 20% visitor (51.10–92.90 m²), +1 TLK per extra 46.45 m²</div>
+      <div class="more">Max occupants 3–4 by size; podium 8 storeys; plinth 60%; meditation room &gt;400 units (46.45 m²); commercial space ≥8%; EVCB &gt;50 units; tandem allowed.</div>
+    </article>
+    <article class="qa" data-text="private hospital (hospital swasta) requirements? site ≥0.40 ha (1 acre) · tlk 1 per 46.45 m² + 20% visitor + 20% additional · ambulance bay min 1 surau, visitor lobby, ambulance/emergency layby, taxi/e-hailing waiting area; landscape 5%; evcb &gt;50 tlk. new in 5th ed. pn14 · commercial gp (new) hospital swasta private parking ambulance site requirement new" data-tags="hospital swasta private parking ambulance site requirement new">
+      <div class="chip">PN14 · Commercial GP (new)</div>
+      <div class="q">Private hospital (hospital swasta) requirements?</div>
+      <div class="a">Site ≥0.40 ha (1 acre) · TLK 1 per 46.45 m² + 20% visitor + 20% additional · Ambulance bay min 1</div>
+      <div class="more">Surau, visitor lobby, ambulance/emergency layby, taxi/e-hailing waiting area; landscape 5%; EVCB &gt;50 TLK. New in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="private school (rendah / menengah) parking and site? tlk 1 per 2 staff + 20% visitor · tlm 20% of tlk · tlb min 1 · site ≥0.40 ha bus layby min 3.66 m wide; covered bicycle parking; sports field, canteen, library, surau; perimeter fencing. new in 5th ed. pn15 · commercial gp (new) school sekolah swasta private parking staff tlk site requirement new" data-tags="school sekolah swasta private parking staff tlk site requirement new">
+      <div class="chip">PN15 · Commercial GP (new)</div>
+      <div class="q">Private school (rendah / menengah) parking and site?</div>
+      <div class="a">TLK 1 per 2 staff + 20% visitor · TLM 20% of TLK · TLB min 1 · Site ≥0.40 ha</div>
+      <div class="more">Bus layby min 3.66 m wide; covered bicycle parking; sports field, canteen, library, surau; perimeter fencing. New in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="ipts (private higher education) parking? academic 1 tlk/46.45 m² · admin 1/46.45 m² + 10% · hostel 1/92.90 m² + 10% site ≥0.40 ha; tlb min 1; open space 10% (&gt;1.21 ha) / 5%; bus layby 3.66 m. new in 5th ed. pn16 · commercial gp (new) ipts university college parking academic admin hostel requirement new" data-tags="ipts university college parking academic admin hostel requirement new">
+      <div class="chip">PN16 · Commercial GP (new)</div>
+      <div class="q">IPTS (private higher education) parking?</div>
+      <div class="a">Academic 1 TLK/46.45 m² · Admin 1/46.45 m² + 10% · Hostel 1/92.90 m² + 10%</div>
+      <div class="more">Site ≥0.40 ha; TLB min 1; open space 10% (&gt;1.21 ha) / 5%; bus layby 3.66 m. New in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="theme park (taman tema) limits? built-up max 40% of site · landscape 10% 4 classifications: individual, in-building, integrated, replica. emergency access required; bus/taxi layby outside development; evcb min 1% tlk. new in 5th ed. pn17 · commercial gp (new) theme park taman tema built up landscape requirement new" data-tags="theme park taman tema built up landscape requirement new">
+      <div class="chip">PN17 · Commercial GP (new)</div>
+      <div class="q">Theme park (taman tema) limits?</div>
+      <div class="a">Built-up max 40% of site · Landscape 10%</div>
+      <div class="more">4 classifications: individual, in-building, integrated, replica. Emergency access required; bus/taxi layby outside development; EVCB min 1% TLK. New in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="golf course (padang golf) minimum land and parking? 9-hole ≥30.35 ha (75 ac) · 18-hole ≥60.70 ha (150 ac) · 2 tlk per hole clubhouse 1 tlk/49.98 m²; driving range 1/49.98 m² + 10%; fairway setbacks 29.87–60.04 m; permitted zones include pelancongan, pertanian, brownfield. new in 5th ed. pn18 · commercial gp (new) golf padang course hole site area parking clubhouse driving range new" data-tags="golf padang course hole site area parking clubhouse driving range new">
+      <div class="chip">PN18 · Commercial GP (new)</div>
+      <div class="q">Golf course (padang golf) minimum land and parking?</div>
+      <div class="a">9-hole ≥30.35 ha (75 ac) · 18-hole ≥60.70 ha (150 ac) · 2 TLK per hole</div>
+      <div class="more">Clubhouse 1 TLK/49.98 m²; driving range 1/49.98 m² + 10%; fairway setbacks 29.87–60.04 m; permitted zones include pelancongan, pertanian, brownfield. New in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="sports complex (kompleks sukan) site areas and parking? stadium 3.00 ha · complex 1.20 ha · pool / field 1.50 ha · squash &amp; tennis 1.00 ha · tlk 1 per 8 seats courts 1 tlk per 20 m² court floor; commercial 1/500 sf; tlb 1 per 1,000 spectators (&lt;40,000), 1 per 2,000 above. new in 5th ed. pn20 · commercial gp (new) sports complex sukan stadium site area parking seats requirement new" data-tags="sports complex sukan stadium site area parking seats requirement new">
+      <div class="chip">PN20 · Commercial GP (new)</div>
+      <div class="q">Sports complex (kompleks sukan) site areas and parking?</div>
+      <div class="a">Stadium 3.00 ha · Complex 1.20 ha · Pool / field 1.50 ha · Squash &amp; tennis 1.00 ha · TLK 1 per 8 seats</div>
+      <div class="more">Courts 1 TLK per 20 m² court floor; commercial 1/500 sf; TLB 1 per 1,000 spectators (&lt;40,000), 1 per 2,000 above. New in 5th Ed.</div>
+    </article>
+    <article class="qa" data-text="surau sizes for commercial buildings? ≤50,000 sf gfa: 6.10 x 6.10 m · 50,001–100,000 sf: 6.10 x 10.67 m · &gt;100,000 sf: 6.10 x 15.24 m (each men &amp; women) qiblat orientation; separate men/women with ablution; not allowed on rooftop, basement, parking, loading bay, facing toilets or below sewage pipes. common · all pn types surau prayer musolla size saiz location requirement commercial" data-tags="surau prayer musolla size saiz location requirement commercial">
+      <div class="chip">Common · all PN types</div>
+      <div class="q">Surau sizes for commercial buildings?</div>
+      <div class="a">≤50,000 sf GFA: 6.10 × 6.10 m · 50,001–100,000 sf: 6.10 × 10.67 m · &gt;100,000 sf: 6.10 × 15.24 m (each men &amp; women)</div>
+      <div class="more">Qiblat orientation; separate men/women with ablution; NOT allowed on rooftop, basement, parking, loading bay, facing toilets or below sewage pipes.</div>
+    </article>
+    <article class="qa" data-text="bazar, arked, r&amp;r and medan selera standards? bazar site 0.10 ha, stall 9.57–12.63 m², max 3 storeys · r&amp;r max 4 storeys, surau 6.10 x 6.10 m each · medan selera site 0.20 ha r&amp;r needs atm + wakaf; medan selera not facing residential rows, tlk 1/46.45 m² + 50% customer, side/rear 3.05 m. pn9 · pn10 · pn11 · commercial gp bazar arked rnr rest relax medan selera food court stall site requirement" data-tags="bazar arked rnr rest relax medan selera food court stall site requirement">
+      <div class="chip">PN9 · PN10 · PN11 · Commercial GP</div>
+      <div class="q">Bazar, arked, R&amp;R and medan selera standards?</div>
+      <div class="a">Bazar site 0.10 ha, stall 9.57–12.63 m², max 3 storeys · R&amp;R max 4 storeys, surau 6.10 × 6.10 m each · Medan selera site 0.20 ha</div>
+      <div class="more">R&amp;R needs ATM + wakaf; medan selera not facing residential rows, TLK 1/46.45 m² + 50% customer, side/rear 3.05 m.</div>
+    </article>
+    <article class="qa" data-text="priority of standards when documents conflict? 1st lphs pekeliling bil. 2/2016 · 2nd gp perniagaan negeri selangor 2025 · 3rd jpbd/planmalaysia national guidelines plot ratio per rt/rkk; excludes podium/basement parking; measured between ukur/semadan boundary lines. commercial gp 2025 · bahagian a priority conflict keutamaan pekeliling plot ratio nisbah" data-tags="priority conflict keutamaan pekeliling plot ratio nisbah">
+      <div class="chip">Commercial GP 2025 · Bahagian A</div>
+      <div class="q">Priority of standards when documents conflict?</div>
+      <div class="a">1st LPHS Pekeliling Bil. 2/2016 · 2nd GP Perniagaan Negeri Selangor 2025 · 3rd JPBD/PLANMalaysia national guidelines</div>
+      <div class="more">Plot ratio per RT/RKK; excludes podium/basement parking; measured between ukur/semadan boundary lines.</div>
+    </article>
+  </div>
+</section>
+<section class="part" id="industrial" style="--accent:var(--s3)">
+  <div class="ph" role="button" tabindex="0" aria-expanded="true">
+    <span class="pnum">03</span>
+    <span class="pt">JPBD Industrial Guidelines</span>
+    <span class="pm">IND1–IND7 · Edisi Kelima 2025</span>
+    <span class="pr">14 Q&amp;As</span>
+    <span class="ch">&#9662;</span>
+  </div>
+  <div class="grid">
+    <article class="qa" data-text="industrial buffer zones to residential? heavy 300 m (planting 20.12 m) · medium 150 m (10.06 m) · light 50 m (10.06 m) measured from building setback line of the industrial lot to building setback line of the nearest residential lot. industrial gp 2025 · buffer zon buffer zone zon penampan heavy berat medium sederhana light ringan residential distance requirement" data-tags="buffer zone zon penampan heavy berat medium sederhana light ringan residential distance requirement">
+      <div class="chip">Industrial GP 2025 · buffer zon</div>
+      <div class="q">Industrial buffer zones to residential?</div>
+      <div class="a">Heavy 300 m (planting 20.12 m) · Medium 150 m (10.06 m) · Light 50 m (10.06 m)</div>
+      <div class="more">Measured from building setback line of the industrial lot to building setback line of the nearest residential lot.</div>
+    </article>
+    <article class="qa" data-text="industrial terrace factory lot size? 6.10 x 24.38 m (20' x 80') · affordable industrial terrace 6.10 x 18.29 m (20' x 60') block max 91.44 m (300'); rear lane 12.19 m (with parking) / 9.14 m (no parking); side lane 12.19 m. ind1 · industrial gp 2025 industrial terrace industri lot size saiz lot affordable mampu milik requirement" data-tags="industrial terrace industri lot size saiz lot affordable mampu milik requirement">
+      <div class="chip">IND1 · Industrial GP 2025</div>
+      <div class="q">Industrial terrace factory lot size?</div>
+      <div class="a">6.10 × 24.38 m (20' x 80') · Affordable industrial terrace 6.10 × 18.29 m (20' x 60')</div>
+      <div class="more">Block max 91.44 m (300'); rear lane 12.19 m (with parking) / 9.14 m (no parking); side lane 12.19 m.</div>
+    </article>
+    <article class="qa" data-text="industrial parking rates? production 1 tlk/92.90 m² (1,000 sf) · office 1/46.45 m² + 10% · tlm 1/185.81 m² · lorry 1 tll per 5 units warehouse 1 tlk/232.26 m² (ind2). loading bay min 9.15 x 7.92 m (30' x 26'). evcb mandatory &gt;50 tlk: min 1% + 1 oku unit. canteen 2% industrial gfa. ind1 · ind2 · industrial gp industrial parking tlk tlm tll lorry loading bay rate requirement" data-tags="industrial parking tlk tlm tll lorry loading bay rate requirement">
+      <div class="chip">IND1 · IND2 · Industrial GP</div>
+      <div class="q">Industrial parking rates?</div>
+      <div class="a">Production 1 TLK/92.90 m² (1,000 sf) · Office 1/46.45 m² + 10% · TLM 1/185.81 m² · Lorry 1 TLL per 5 units</div>
+      <div class="more">Warehouse 1 TLK/232.26 m² (IND2). Loading bay min 9.15 × 7.92 m (30' x 26'). EVCB mandatory &gt;50 TLK: min 1% + 1 OKU unit. Canteen 2% industrial GFA.</div>
+    </article>
+    <article class="qa" data-text="detached / semi-d / cluster factory lot size and setbacks? detached min 0.5 acre (small) / 1 acre (medium-large) · semi-d &amp; cluster 19.81 x 35.05 m (65' x 115') front setback 12.19 m; side/rear 7.62 m (small lot 9.15 / 6.10 m); plinth max 60%; office max 30% gfa; tll 1/929.03 m² min 2. ind2 · industrial gp detached sesebuah semi-d berkembar cluster kluster factory industri lot setback requirement" data-tags="detached sesebuah semi-d berkembar cluster kluster factory industri lot setback requirement">
+      <div class="chip">IND2 · Industrial GP</div>
+      <div class="q">Detached / semi-D / cluster factory lot size and setbacks?</div>
+      <div class="a">Detached min 0.5 acre (small) / 1 acre (medium-large) · Semi-D &amp; cluster 19.81 × 35.05 m (65' x 115')</div>
+      <div class="more">Front setback 12.19 m; side/rear 7.62 m (small lot 9.15 / 6.10 m); plinth max 60%; office max 30% GFA; TLL 1/929.03 m² min 2.</div>
+    </article>
+    <article class="qa" data-text="industrial strata — landed and multi-storey? landed strata site &gt;10 acres · multi-storey strata site ≥1 acre with min 2 goods lifts multi-storey: plinth 60%, office 30%, tll 1/1,393.55 m² (15,000 sf); flagpole min 3 (malaysia, selangor, company). landed: access 7.32 m, tll 1 per 5 units. ind3 · ind4 · industrial gp strata bertanah bertingkat landed multi storey site area goods lift requirement" data-tags="strata bertanah bertingkat landed multi storey site area goods lift requirement">
+      <div class="chip">IND3 · IND4 · Industrial GP</div>
+      <div class="q">Industrial strata — landed and multi-storey?</div>
+      <div class="a">Landed strata site &gt;10 acres · Multi-storey strata site ≥1 acre with min 2 goods lifts</div>
+      <div class="more">Multi-storey: plinth 60%, office 30%, TLL 1/1,393.55 m² (15,000 sf); flagpole min 3 (Malaysia, Selangor, Company). Landed: access 7.32 m, TLL 1 per 5 units.</div>
+    </article>
+    <article class="qa" data-text="data centre (pusat data) tnb substation requirements? 11 kv (1–5 mva): 7.60 x 5.70 m · 33 kv (&gt;5–25 mva): 30 x 30 m · 132 kv: 120 x 110 m · 275 kv: 190 x 160 m internet min 300 mbps from 2 providers; buffer 50 m to residential; open space 10% (5% if local plan allows); spah roof ≥100 m²; front setback 12.19 m, side 6.10 m. ind5 · industrial gp 2025 data centre pusat data tnbs su ssu kva buffer internet requirement" data-tags="data centre pusat data tnbs su ssu kva buffer internet requirement">
+      <div class="chip">IND5 · Industrial GP 2025</div>
+      <div class="q">Data centre (pusat data) TNB substation requirements?</div>
+      <div class="a">11 kV (1–5 MVA): 7.60 × 5.70 m · 33 kV (&gt;5–25 MVA): 30 × 30 m · 132 kV: 120 × 110 m · 275 kV: 190 × 160 m</div>
+      <div class="more">Internet min 300 Mbps from 2 providers; buffer 50 m to residential; open space 10% (5% if local plan allows); SPAH roof ≥100 m²; front setback 12.19 m, side 6.10 m.</div>
+    </article>
+    <article class="qa" data-text="centralised labour quarters (clq) requirements? threshold ≥500 workers (sia required) · setbacks 6.10 m (≤3 storeys) / 12.19 m (&gt;3 storeys) between buildings 12.19–24.38 m; perimeter planting 6.10 m + 1.00 m; parking: management 2%, visitor 1%, tlm 5%, bicycle 10% of occupants. ind6 · industrial gp clq centralised labour quarters asrama worker pekerja setback parking requirement" data-tags="clq centralised labour quarters asrama worker pekerja setback parking requirement">
+      <div class="chip">IND6 · Industrial GP</div>
+      <div class="q">Centralised Labour Quarters (CLQ) requirements?</div>
+      <div class="a">Threshold ≥500 workers (SIA required) · Setbacks 6.10 m (≤3 storeys) / 12.19 m (&gt;3 storeys)</div>
+      <div class="more">Between buildings 12.19–24.38 m; perimeter planting 6.10 m + 1.00 m; parking: management 2%, visitor 1%, TLM 5%, bicycle 10% of occupants.</div>
+    </article>
+    <article class="qa" data-text="managed industrial park (mip) requirements? min 200 acres · guardhouse 1.83 x 2.44 m set back ≥6.10 m · 24-hour security safety bar clearance ≥4.57 m (15'). ind7 · industrial gp mip managed industrial park size area guardhouse security requirement" data-tags="mip managed industrial park size area guardhouse security requirement">
+      <div class="chip">IND7 · Industrial GP</div>
+      <div class="q">Managed Industrial Park (MIP) requirements?</div>
+      <div class="a">Min 200 acres · Guardhouse 1.83 × 2.44 m set back ≥6.10 m · 24-hour security</div>
+      <div class="more">Safety bar clearance ≥4.57 m (15').</div>
+    </article>
+    <article class="qa" data-text="industrial roads — cul-de-sac and service road widths? cul-de-sac max 190.50 m (625') with 30.48 m (100') turning circle · service &amp; local road min 20.12 m (66') parking bay sizes: tlk 2.50 x 5.00 m; oku 3.60 x 5.00 m; evcb 2.50 x 6.00 m; lorry 3.00 x 6.00 / 4.00 x 15.00 m; trailer 4.00 x 18.00 m; bus 3.00 x 12.00 m. industrial gp 2025 · roads &amp; bays industrial road cul-de-sac jalan buntu service road width bay size parking requirement" data-tags="industrial road cul-de-sac jalan buntu service road width bay size parking requirement">
+      <div class="chip">Industrial GP 2025 · roads &amp; bays</div>
+      <div class="q">Industrial roads — cul-de-sac and service road widths?</div>
+      <div class="a">Cul-de-sac max 190.50 m (625') with 30.48 m (100') turning circle · Service &amp; local road min 20.12 m (66')</div>
+      <div class="more">Parking bay sizes: TLK 2.50 × 5.00 m; OKU 3.60 × 5.00 m; EVCB 2.50 × 6.00 m; lorry 3.00 × 6.00 / 4.00 × 15.00 m; trailer 4.00 × 18.00 m; bus 3.00 × 12.00 m.</div>
+    </article>
+    <article class="qa" data-text="mezzanine floor limits in factories? min clear height 3.00 m (9.84') · max 30% of allowable floor area per pekeliling su jpn bil. 3/2023 exclusions from plot ratio. industrial gp 2025 · mezzanine mezzanine height tinggi area percentage limit requirement" data-tags="mezzanine height tinggi area percentage limit requirement">
+      <div class="chip">Industrial GP 2025 · mezzanine</div>
+      <div class="q">Mezzanine floor limits in factories?</div>
+      <div class="a">Min clear height 3.00 m (9.84') · Max 30% of allowable floor area</div>
+      <div class="more">Per Pekeliling SU JPN Bil. 3/2023 exclusions from plot ratio.</div>
+    </article>
+    <article class="qa" data-text="worker accommodation (asrama pekerja) limits? max 15% of plot area or industrial gfa · setbacks 6.10 m (≤3 storeys) / 12.19 m (&gt;3 storeys) per akta 446 (kementerian sumber manusia). worker transport encouraged if &gt;500 m and no nearby public transport. industrial gp 2025 · asrama worker accommodation asrama pekerja akta 446 percentage setback requirement" data-tags="worker accommodation asrama pekerja akta 446 percentage setback requirement">
+      <div class="chip">Industrial GP 2025 · asrama</div>
+      <div class="q">Worker accommodation (asrama pekerja) limits?</div>
+      <div class="a">Max 15% of plot area or industrial GFA · Setbacks 6.10 m (≤3 storeys) / 12.19 m (&gt;3 storeys)</div>
+      <div class="more">Per Akta 446 (Kementerian Sumber Manusia). Worker transport encouraged if &gt;500 m and no nearby public transport.</div>
+    </article>
+    <article class="qa" data-text="industrial open space and perimeter planting? min 5% of scheme / site · 70% functional · planting 3.05 m front / 1.52 m sides (&gt;1 acre) max 30% countable from perimeter, buffer, pond, slope, utility. &lt;1 acre: 1.52 m all around. industrial gp 2025 · open space industrial open space tanah lapang perimeter planting tanaman percentage requirement" data-tags="industrial open space tanah lapang perimeter planting tanaman percentage requirement">
+      <div class="chip">Industrial GP 2025 · open space</div>
+      <div class="q">Industrial open space and perimeter planting?</div>
+      <div class="a">Min 5% of scheme / site · 70% functional · Planting 3.05 m front / 1.52 m sides (&gt;1 acre)</div>
+      <div class="more">Max 30% countable from perimeter, buffer, pond, slope, utility. &lt;1 acre: 1.52 m all around.</div>
+    </article>
+    <article class="qa" data-text="industrial canteen, prayer room and surau? canteen 2% of industrial gfa or 0.5% of warehouse gfa · surau trigger 1,000 workers, site 0.5 acre prayer room ≤1 acre: 3.05 x 9.15 m (split male/female 15 ft); &gt;1 acre: 6.10 x 6.10 m. surau parking 1 tlk &amp; 1 tlm per 14.86 m² prayer space; oku 20% tlk. ind1 · accessory · surau canteen kantin prayer room surau industrial requirement trigger" data-tags="canteen kantin prayer room surau industrial requirement trigger">
+      <div class="chip">IND1 · accessory · surau</div>
+      <div class="q">Industrial canteen, prayer room and surau?</div>
+      <div class="a">Canteen 2% of industrial GFA or 0.5% of warehouse GFA · Surau trigger 1,000 workers, site 0.5 acre</div>
+      <div class="more">Prayer room ≤1 acre: 3.05 × 9.15 m (split male/female 15 ft); &gt;1 acre: 6.10 × 6.10 m. Surau parking 1 TLK &amp; 1 TLM per 14.86 m² prayer space; OKU 20% TLK.</div>
+    </article>
+    <article class="qa" data-text="what is allowed inside industrial setbacks? substation, pylon/signboard, guardhouse, atm, garbage chamber, water tank, pump house, cooling tower, covered parking, lpg tank, 2nd emergency staircase, wwtp second emergency staircase per jbpm requirement for 3-storey factories. industrial gp 2025 · structures in setback setback anjakan allowed structures bangunan substation guardhouse tank" data-tags="setback anjakan allowed structures bangunan substation guardhouse tank">
+      <div class="chip">Industrial GP 2025 · structures in setback</div>
+      <div class="q">What is allowed inside industrial setbacks?</div>
+      <div class="a">Substation, pylon/signboard, guardhouse, ATM, garbage chamber, water tank, pump house, cooling tower, covered parking, LPG tank, 2nd emergency staircase, WWTP</div>
+      <div class="more">Second emergency staircase per JBPM requirement for 3-storey factories.</div>
+    </article>
+  </div>
+</section>
+<section class="part" id="gfa" style="--accent:var(--s4)">
+  <div class="ph" role="button" tabindex="0" aria-expanded="true">
+    <span class="pnum">04</span>
+    <span class="pt">GFA / Plot Ratio Definition</span>
+    <span class="pm">Nisbah Plot · JPBD definition sheet</span>
+    <span class="pr">3 Q&amp;As</span>
+    <span class="ch">&#9662;</span>
+  </div>
+  <div class="grid">
+    <article class="qa" data-text="what is plot ratio (nisbah plot) and how is it calculated? total building floor area ÷ plot area, expressed 1 : x, measured between survey boundary lines if no survey boundary lines, temporary boundary lines (garisan sempadan sementara) used. car parks excluded from floor area. jpbd gfa definition plot ratio nisbah calculation formula garisan sempadan ukur definition" data-tags="plot ratio nisbah calculation formula garisan sempadan ukur definition">
+      <div class="chip">JPBD GFA Definition</div>
+      <div class="q">What is plot ratio (nisbah plot) and how is it calculated?</div>
+      <div class="a">Total building floor area ÷ plot area, expressed 1 : X, measured between survey boundary lines</div>
+      <div class="more">If no survey boundary lines, temporary boundary lines (garisan sempadan sementara) used. Car parks excluded from floor area.</div>
+    </article>
+    <article class="qa" data-text="what counts as floor area for plot ratio? included: utility rooms, ventilation spaces, stairs &amp; corridors, terraces · excluded: multi-storey &amp; basement car parks industrial additions per pekeliling su jpn bil. 3/2023: also exclude lobbies, lifts, a/c, water tanks, pump rooms, common property, green building features. jpbd gfa · su jpn 3/2023 included excluded floor area ruang lantai car park plot ratio industrial exclusion" data-tags="included excluded floor area ruang lantai car park plot ratio industrial exclusion">
+      <div class="chip">JPBD GFA · SU JPN 3/2023</div>
+      <div class="q">What counts as floor area for plot ratio?</div>
+      <div class="a">Included: utility rooms, ventilation spaces, stairs &amp; corridors, terraces · Excluded: multi-storey &amp; basement car parks</div>
+      <div class="more">Industrial additions per Pekeliling SU JPN Bil. 3/2023: also exclude lobbies, lifts, A/C, water tanks, pump rooms, common property, green building features.</div>
+    </article>
+    <article class="qa" data-text="worked examples of plot ratio? 20-storey office: 154,600 ÷ 50,000 kp = 1 : 3.09 · 7-storey hotel: 30,123 ÷ 7,736 kp = 1 : 3.89 both exclude car park floors (office tlk l2–3 + b1–4; hotel 3 basement levels). related: pekeliling suk bil. 2/2023 (nisbah plot). jpbd gfa definition example contoh office hotel plot ratio nisbah calculation" data-tags="example contoh office hotel plot ratio nisbah calculation">
+      <div class="chip">JPBD GFA Definition</div>
+      <div class="q">Worked examples of plot ratio?</div>
+      <div class="a">20-storey office: 154,600 ÷ 50,000 kp = 1 : 3.09 · 7-storey hotel: 30,123 ÷ 7,736 kp = 1 : 3.89</div>
+      <div class="more">Both exclude car park floors (office TLK L2–3 + B1–4; hotel 3 basement levels). Related: Pekeliling SUK Bil. 2/2023 (nisbah plot).</div>
+    </article>
+  </div>
+</section>
+<section class="part" id="selangorku" style="--accent:var(--s5)">
+  <div class="ph" role="button" tabindex="0" aria-expanded="true">
+    <span class="pnum">05</span>
+    <span class="pt">Rumah Selangorku</span>
+    <span class="pm">Dasar 3.0 (LPHS 1/2023) + Harapan / Idaman MBI (LPHS 1/2025)</span>
+    <span class="pr">14 Q&amp;As</span>
+    <span class="ch">&#9662;</span>
+  </div>
+  <div class="grid">
+    <article class="qa" data-text="rumah selangorku 3.0 unit types, sizes and prices? solo 450 sf rm114,750 · duo 600 sf rm153,000 · trio 750 sf rm191,250 · quad 900 sf rm229,500 · quad teres 20' x 60' rm250,000 based on rm255/sf (quad teres rm277.78/sf). bedrooms: solo 1, duo 2, trio &amp; quad 3. dasar rsku 3.0 · lphs bil. 1/2023 selangorku type jenis solo duo trio quad price harga size sf rooms bedroom" data-tags="selangorku type jenis solo duo trio quad price harga size sf rooms bedroom">
+      <div class="chip">Dasar RSku 3.0 · LPHS Bil. 1/2023</div>
+      <div class="q">Rumah Selangorku 3.0 unit types, sizes and prices?</div>
+      <div class="a">Solo 450 sf RM114,750 · Duo 600 sf RM153,000 · Trio 750 sf RM191,250 · Quad 900 sf RM229,500 · Quad Teres 20' x 60' RM250,000</div>
+      <div class="more">Based on RM255/sf (Quad Teres RM277.78/sf). Bedrooms: Solo 1, Duo 2, Trio &amp; Quad 3.</div>
+    </article>
+    <article class="qa" data-text="selangorku income ceiling and eligibility? income ceiling rm14,500/month (all types) · register via sphns · no bumiputera discount subsale moratorium 5 years from s&amp;p date; approval by yb dato' suk; price-controlled housing. dasar rsku 3.0 · seksyen 6 selangorku income pendapatan ceiling kelayakan eligibility moratorium subsale 5 years" data-tags="selangorku income pendapatan ceiling kelayakan eligibility moratorium subsale 5 years">
+      <div class="chip">Dasar RSku 3.0 · Seksyen 6</div>
+      <div class="q">Selangorku income ceiling and eligibility?</div>
+      <div class="a">Income ceiling RM14,500/month (all types) · Register via SPHNS · No bumiputera discount</div>
+      <div class="more">Subsale moratorium 5 years from S&amp;P date; approval by YB Dato' SUK; price-controlled housing.</div>
+    </article>
+    <article class="qa" data-text="selangorku maximum density? 120 units/acre (all zones) · 150 u/a for 100% rsku tod/tad · mixed rsku + free market 90 u/a (5–10 ac only) minimum optimum 300 units per scheme. tod mixed (tad) can reach 100 u/a. dasar rsku 3.0 · pr7 selangorku density densiti units acre maximum tod tad mixed" data-tags="selangorku density densiti units acre maximum tod tad mixed">
+      <div class="chip">Dasar RSku 3.0 · PR7</div>
+      <div class="q">Selangorku maximum density?</div>
+      <div class="a">120 units/acre (all zones) · 150 u/a for 100% RSku TOD/TAD · Mixed RSku + free market 90 u/a (5–10 ac only)</div>
+      <div class="more">Minimum optimum 300 units per scheme. TOD mixed (TAD) can reach 100 u/a.</div>
+    </article>
+    <article class="qa" data-text="selangorku quota by zone and land size? zon 1: 20% (&lt;5 ac), 20% (5–10), 30% (10–20), 40% (20–50+) · zon 2: from 15% (5 ac) · zon 3: mandatory teres tod/tad quota includes solo/duo types; zon 4 remote areas trio/quad only, per lphs approval. dasar rsku 3.0 · housing gp a-3.9 selangorku quota peratusan percentage zon zone land size ekar acre requirement" data-tags="selangorku quota peratusan percentage zon zone land size ekar acre requirement">
+      <div class="chip">Dasar RSku 3.0 · Housing GP A-3.9</div>
+      <div class="q">Selangorku quota by zone and land size?</div>
+      <div class="a">Zon 1: 20% (&lt;5 ac), 20% (5–10), 30% (10–20), 40% (20–50+) · Zon 2: from 15% (5 ac) · Zon 3: mandatory teres</div>
+      <div class="more">TOD/TAD quota includes Solo/Duo types; Zon 4 remote areas Trio/Quad only, per LPHS approval.</div>
+    </article>
+    <article class="qa" data-text="which areas are in zon 1 (lembah klang)? all of petaling · gombak: batu &amp; hulu kelang · klang (mukim klang) · hulu langat: cheras, kajang, ampang, semenyih · sepang: cyberjaya zon 2 sub-urban (setapak, rawang, kapar, sepang excl. cyberjaya, kuala langat, ijok...); zon 3 rural (hulu selangor, sabak bernam, tanjung karang); zon 4 remote. dasar rsku 3.0 · zon definition zon zone 1 2 3 4 lembah klang petaling gombak klang hulu langat sepang cyberjaya mukim area" data-tags="zon zone 1 2 3 4 lembah klang petaling gombak klang hulu langat sepang cyberjaya mukim area">
+      <div class="chip">Dasar RSku 3.0 · zon definition</div>
+      <div class="q">Which areas are in Zon 1 (Lembah Klang)?</div>
+      <div class="a">All of Petaling · Gombak: Batu &amp; Hulu Kelang · Klang (Mukim Klang) · Hulu Langat: Cheras, Kajang, Ampang, Semenyih · Sepang: Cyberjaya</div>
+      <div class="more">Zon 2 sub-urban (Setapak, Rawang, Kapar, Sepang excl. Cyberjaya, Kuala Langat, Ijok...); Zon 3 rural (Hulu Selangor, Sabak Bernam, Tanjung Karang); Zon 4 remote.</div>
+    </article>
+    <article class="qa" data-text="selangorku parking requirement? solo/duo/trio 1 tlk per unit (accessory) · trio visitor 20% of units · quad 2 tlk + 10% visitor tandem allowed for same-lot owners; oku per ms1184 universal design. dasar rsku 3.0 · seksyen 3.5 selangorku parking tlk visitor tandem accessory requirement" data-tags="selangorku parking tlk visitor tandem accessory requirement">
+      <div class="chip">Dasar RSku 3.0 · Seksyen 3.5</div>
+      <div class="q">Selangorku parking requirement?</div>
+      <div class="a">Solo/Duo/Trio 1 TLK per unit (accessory) · Trio visitor 20% of units · Quad 2 TLK + 10% visitor</div>
+      <div class="more">Tandem allowed for same-lot owners; OKU per MS1184 universal design.</div>
+    </article>
+    <article class="qa" data-text="selangorku sales mechanism (merit / terbuka / terus / bebas)? merit: computer selection, no existing property · terbuka: after 3 merit offers + 12 months · terus: 6 months after terbuka letter · bebas: after ccc all approved by yb dato' suk. terbuka/terus income ≤rm14.5k individual, household &lt;rm20k; bebas for site workers 100% &amp; ccc. dasar rsku 3.0 · lampiran 1 selangorku sales jualan merit terbuka terus bebas mechanism approval" data-tags="selangorku sales jualan merit terbuka terus bebas mechanism approval">
+      <div class="chip">Dasar RSku 3.0 · Lampiran 1</div>
+      <div class="q">Selangorku sales mechanism (Merit / Terbuka / Terus / Bebas)?</div>
+      <div class="a">Merit: computer selection, no existing property · Terbuka: after 3 merit offers + 12 months · Terus: 6 months after Terbuka letter · Bebas: after CCC</div>
+      <div class="more">All approved by YB Dato' SUK. Terbuka/Terus income ≤RM14.5k individual, household &lt;RM20k; Bebas for site workers 100% &amp; CCC.</div>
+    </article>
+    <article class="qa" data-text="selangorku minimum construction specs? concrete frame, walls and floor · min 300 mm window reveal · skirting provided · a/c ledge excluded from floor area electrical points: solo/duo 7–10 lighting, 8–10 power; trio/quad 12–15 lighting, 16 power, 2 water heater points. dasar rsku 3.0 · seksyen 5 selangorku specification spesifikasi concrete electrical points window ledge" data-tags="selangorku specification spesifikasi concrete electrical points window ledge">
+      <div class="chip">Dasar RSku 3.0 · Seksyen 5</div>
+      <div class="q">Selangorku minimum construction specs?</div>
+      <div class="a">Concrete frame, walls and floor · Min 300 mm window reveal · Skirting provided · A/C ledge excluded from floor area</div>
+      <div class="more">Electrical points: Solo/Duo 7–10 lighting, 8–10 power; Trio/Quad 12–15 lighting, 16 power, 2 water heater points.</div>
+    </article>
+    <article class="qa" data-text="selangorku harapan / idaman mbi prices and unit mix? cat 1: 1,000 sf rm250,000 (20% of units) · cat 2: 1,080 sf rm295,000 (80%) alternative sizes at rm273/sf with main committee approval. effective 3 feb 2025 (lphs bil. 1/2025); cancels bil. 1/2021 post-covid incentive. harapan/mbi · lphs bil. 1/2025 harapan idaman mbi category kategori price harga rm250000 rm295000 unit mix" data-tags="harapan idaman mbi category kategori price harga rm250000 rm295000 unit mix">
+      <div class="chip">Harapan/MBI · LPHS Bil. 1/2025</div>
+      <div class="q">Selangorku Harapan / Idaman MBI prices and unit mix?</div>
+      <div class="a">Cat 1: 1,000 sf RM250,000 (20% of units) · Cat 2: 1,080 sf RM295,000 (80%)</div>
+      <div class="more">Alternative sizes at RM273/sf with Main Committee approval. Effective 3 Feb 2025 (LPHS Bil. 1/2025); cancels Bil. 1/2021 post-COVID incentive.</div>
+    </article>
+    <article class="qa" data-text="selangorku harapan furnishings? cat 1: tv cabinet + led tv, kitchen cabinet + fridge, wardrobes, a/c each bedroom, electronic water heaters cat 2 adds: clothes dryer, iron grilles, bbq area, gym, childcare room, cctv, pool. contra units: min 1,000 sf with kitchen cabinet, 4 fans, lights, grilles. harapan/mbi · seksyen 3.1 harapan furnishing perabot kitchen wardrobe aircond tv category" data-tags="harapan furnishing perabot kitchen wardrobe aircond tv category">
+      <div class="chip">Harapan/MBI · Seksyen 3.1</div>
+      <div class="q">Selangorku Harapan furnishings?</div>
+      <div class="a">Cat 1: TV cabinet + LED TV, kitchen cabinet + fridge, wardrobes, A/C each bedroom, electronic water heaters</div>
+      <div class="more">Cat 2 adds: clothes dryer, iron grilles, BBQ area, gym, childcare room, CCTV, pool. Contra units: min 1,000 sf with kitchen cabinet, 4 fans, lights, grilles.</div>
+    </article>
+    <article class="qa" data-text="contra units to state government / lphs? idaman mbi 12% · harapan 15–30% · formula 15% x (cat a + cat b built), round 0.5 up example: 15% x 150 = 22.5 → 23 units. developer bears s&amp;p legal costs + 24 months maintenance &amp; sinking fund; used for smart sewa / 2stay. harapan/mbi · seksyen 3.2 contra unit percentage formula smart sewa 2stay maintenance sinking fund" data-tags="contra unit percentage formula smart sewa 2stay maintenance sinking fund">
+      <div class="chip">Harapan/MBI · Seksyen 3.2</div>
+      <div class="q">Contra units to State Government / LPHS?</div>
+      <div class="a">Idaman MBI 12% · Harapan 15–30% · Formula 15% × (Cat A + Cat B built), round 0.5 up</div>
+      <div class="more">Example: 15% × 150 = 22.5 → 23 units. Developer bears S&amp;P legal costs + 24 months maintenance &amp; sinking fund; used for Smart Sewa / 2STAY.</div>
+    </article>
+    <article class="qa" data-text="selangorku harapan density and parking? 120 units/acre all zones · tod/tad 150 u/a (100%) or 100 u/a (mixed) · 2 car bays per unit (accessory parcel) tandem allowed for same homeowner; ev charging per pbt guidelines. harapan/mbi · seksyen 3.3 harapan density densiti parking tlk bays accessory tod" data-tags="harapan density densiti parking tlk bays accessory tod">
+      <div class="chip">Harapan/MBI · Seksyen 3.3</div>
+      <div class="q">Selangorku Harapan density and parking?</div>
+      <div class="a">120 units/acre all zones · TOD/TAD 150 u/a (100%) or 100 u/a (mixed) · 2 car bays per unit (accessory parcel)</div>
+      <div class="more">Tandem allowed for same homeowner; EV charging per PBT guidelines.</div>
+    </article>
+    <article class="qa" data-text="harapan construction timeline and quota split? start within 2 years of mmkn approval or cancelled · build first / simultaneous with market units · quota 50% lphs / 50% developer, bumiputera 50/50 buyer list via sphns; priority construction enforceable with stop-work order; delays need lphs approval + commitment letter &amp; statutory declaration. harapan/mbi · seksyen 3.3 harapan construction timeline 2 years quota bumiputera lphs developer split" data-tags="harapan construction timeline 2 years quota bumiputera lphs developer split">
+      <div class="chip">Harapan/MBI · Seksyen 3.3</div>
+      <div class="q">Harapan construction timeline and quota split?</div>
+      <div class="a">Start within 2 years of MMKN approval or cancelled · Build first / simultaneous with market units · Quota 50% LPHS / 50% developer, Bumiputera 50/50</div>
+      <div class="more">Buyer list via SPHNS; priority construction enforceable with stop-work order; delays need LPHS approval + commitment letter &amp; statutory declaration.</div>
+    </article>
+    <article class="qa" data-text="penalties for selangorku harapan non-compliance? 30% penalty for failing to obtain buyer list from lphs · +5% for bumiputera quota violation computed on s&amp;p price or ceiling price (whichever higher) per unit sold. harapan/mbi · penalties harapan penalty denda non compliance buyer list bumiputera" data-tags="harapan penalty denda non compliance buyer list bumiputera">
+      <div class="chip">Harapan/MBI · penalties</div>
+      <div class="q">Penalties for Selangorku Harapan non-compliance?</div>
+      <div class="a">30% penalty for failing to obtain buyer list from LPHS · +5% for bumiputera quota violation</div>
+      <div class="more">Computed on S&amp;P price or ceiling price (whichever higher) per unit sold.</div>
+    </article>
+  </div>
+</section>
+  </div>
+
+  <footer>Answers compiled from Knowledge Library summaries of the Selangor Edisi Kelima (2025) guidelines and LPHS circulars — not a substitute for the gazetted documents; verify against source PDFs in Knowledge-Library/guidelines/state-guidelines/selangor/ for compliance work. Compiled by Sky Architects Sdn Bhd · T +603 7955 0930 · E info@sky-db.com.</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var SYN={
+"bungalow":["sesebuah","detached"],"cluster":["kluster"],"kluster":["cluster"],
+"terrace":["teres"],"teres":["terrace"],
+"semi":["berkembar"],"semi-d":["berkembar"],"semid":["berkembar"],"semi-detached":["berkembar"],"berkembar":["semi-d","semi-detached"],
+"detached":["sesebuah"],"sesebuah":["detached"],
+"cul-de-sac":["jalan buntu","buntu"],"buntu":["cul-de-sac"],
+"setback":["anjakan"],"setbacks":["anjakan"],"anjakan":["setback"],
+"carpark":["tlk","parking"],"parking":["tlk","tempat letak"],"tlk":["parking"],"tlm":["motorcycle"],
+"apartment":["pangsapuri"],"pangsapuri":["apartment"],"condo":["kondominium"],"kondo":["kondominium"],
+"plot":["nisbah"],"nisbah":["plot"],"ratio":["nisbah"],
+"height":["tinggi","ketinggian"],"tinggi":["height"],"ketinggian":["height"],
+"storey":["tingkat","storeys"],"storeys":["tingkat","storey"],"tingkat":["storey","storeys"],
+"density":["densiti"],"densiti":["density"],
+"zone":["zon"],"zon":["zone"],
+"affordable":["mampu milik"],
+"open":["tanah lapang"],"space":["tanah lapang"],
+"ev":["evcb"],"evcb":["ev charging","charging"],
+"guardhouse":["pondok pengawal"],"pengawal":["guardhouse"],"pondok":["guardhouse","pengawal"],
+"labour":["clq"],"quarters":["clq"],"clq":["asrama","labour quarters"],
+"worker":["pekerja","asrama"],"pekerja":["worker"],"asrama":["worker"],
+"income":["pendapatan"],"pendapatan":["income"],
+"price":["harga"],"harga":["price"],
+"size":["saiz"],"saiz":["size"],
+"max":["maximum","maksimum"],"maximum":["max"],"maksimum":["maximum"],
+"landed":["bertanah"],"bertanah":["landed"],
+"factory":["industrial","industri"],
+"shop":["kedai"],"shophouse":["kedai teres"],"shoplot":["kedai"],"kedai":["shop"],
+"bus":["tlb"],"bicycle":["tlb","basikal"],"basikal":["bicycle"],
+"moratorium":["subsale"],"subsale":["moratorium"],
+"properties":["landed","property"],"house":["rumah"],"rumah":["house"],
+"minimum":["min"],"facility":["facilities"],"facilities":["kemudahan"],"kemudahan":["facilities"]
+};
+var STOP={a:1,an:1,the:1,for:1,of:1,in:1,on:1,is:1,are:1,to:1,and:1,or:1,what:1,which:1,how:1,does:1,do:1,with:1,my:1,can:1,i:1,it:1,its:1};
+
+var search=document.getElementById('search'),
+    clearBtn=document.getElementById('clear'),
+    mc=document.getElementById('mc'),
+    nr=document.getElementById('nr'),
+    results=document.getElementById('results'),
+    resHead=document.getElementById('resHead'),
+    resGrid=document.getElementById('resGrid'),
+    browse=document.getElementById('browse'),
+    cards=[].slice.call(document.querySelectorAll('.qa')),
+    sections=[].slice.call(document.querySelectorAll('section.part')),
+    themeBtn=document.getElementById('themeBtn');
+
+function norm(s){return s.toLowerCase().split('×').join('x');}
+function variants(tok){
+  var v=[tok];
+  if(tok.length>3 && tok.slice(-1)==='s') v.push(tok.slice(0,-1));
+  v.slice().forEach(function(x){ if(SYN[x]) SYN[x].forEach(function(y){ if(v.indexOf(y)<0) v.push(y); }); });
+  return v;
+}
+function parseQuery(q){
+  var lower=q.toLowerCase();
+  var groups=[], words=[];
+  lower.split(' ').forEach(function(w){
+    if(!w) return;
+    if(w.indexOf('/')>=0){
+      var parts=w.split('/').map(function(s){ return s.replace(/[^a-z0-9'-]/g,''); }).filter(Boolean);
+      if(parts.length>1){ groups.push(parts); return; }
+    }
+    words.push(w);
+  });
+  var toks=[];
+  words.join(' ').split(/[^a-z0-9'-]+/).forEach(function(t){
+    if(t && t.length>1 && !STOP[t] && toks.indexOf(t)<0) toks.push(t);
+  });
+  var all=toks.slice();
+  groups.forEach(function(g){ g.forEach(function(p){ if(p.length>1 && all.indexOf(p)<0) all.push(p); }); });
+  return {toks:toks,groups:groups,all:all};
+}
+function hit(text,v){ for(var i=0;i<v.length;i++){ if(text.indexOf(v[i])>=0) return v[i]; } return null; }
+function tokenScore(p,tok){
+  var v=variants(tok);
+  if(hit(p.qn,v)) return 3;
+  if(hit(p.tags,v)) return 2;
+  if(hit(p.an,v)) return 1;
+  if(hit(p.text,v)) return 1;
+  return 0;
+}
+function scoreCard(card,q){
+  var p={qn:norm(card.querySelector('.q').textContent),an:norm(card.querySelector('.a').textContent+' '+(card.querySelector('.more')?card.querySelector('.more').textContent:'')),tags:card.getAttribute('data-tags')||'',text:card.getAttribute('data-text')||norm(card.textContent)};
+  var s=0;
+  q.toks.forEach(function(t){ s+=tokenScore(p,t); });
+  q.groups.forEach(function(g){ var m=0; g.forEach(function(t){ m=Math.max(m,tokenScore(p,t)); }); s+=m; });
+  return s;
+}
+function matches(card,q){
+  var text=card.getAttribute('data-text')||norm(card.textContent);
+  var okToks=q.toks.every(function(t){ return !!hit(text,variants(t)); });
+  var okGroups=q.groups.every(function(g){ return g.some(function(t){ return !!hit(text,variants(t)); }); });
+  return okToks && okGroups;
+}
+function escHtml(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function hl(el,tokens){
+  if(!el) return;
+  var orig=el.textContent, toks=[];
+  tokens.forEach(function(t){ variants(t).forEach(function(v){ if(v.length>=3 && toks.indexOf(v)<0) toks.push(v); }); });
+  if(!toks.length){ el.textContent=orig; return; }
+  var re=new RegExp('('+toks.join('|')+')','gi');
+  el.innerHTML=escHtml(orig).replace(re,'<mark>$1</mark>');
+}
+function renderResults(q){
+  var pq=parseQuery(q);
+  var and=cards.filter(function(c){return matches(c,pq);});
+  var mode='exact';
+  if(!and.length){ mode='closest'; and=cards.filter(function(c){return scoreCard(c,pq)>0;}); }
+  and.sort(function(a,b){ return scoreCard(b,pq)-scoreCard(a,pq); });
+  browse.style.display='none';
+  results.style.display='block';
+  resHead.textContent=and.length+' answer'+(and.length!==1?'s':'')+(mode==='closest'?' (closest matches):':':')+' "'+q+'"';
+  resGrid.innerHTML='';
+  and.forEach(function(c){
+    var clone=c.cloneNode(true);
+    hl(clone.querySelector('.q'),pq.all);
+    hl(clone.querySelector('.a'),pq.all);
+    var m=clone.querySelector('.more'); if(m) m.textContent=m.textContent;
+    resGrid.appendChild(clone);
+  });
+  mc.textContent=and.length+' of '+cards.length;
+  if(!and.length){
+    nr.style.display='block';
+    nr.innerHTML='<strong>No answer for "'+escHtml(q)+'"</strong> — try "lot size", "setback", "cul-de-sac", "parking", "EVCB", "buffer", "density", or a code like PR1 / PN13 / IND5.';
+  } else nr.style.display='none';
+}
+function applyFilter(){
+  var q=search.value.trim();
+  if(clearBtn) clearBtn.style.display=q?'block':'none';
+  if(q) renderResults(q);
+  else { results.style.display='none'; browse.style.display=''; nr.style.display='none'; mc.textContent=''; }
+}
+if(search){
+  search.addEventListener('input',applyFilter);
+  if(clearBtn) clearBtn.addEventListener('click',function(){ search.value=''; applyFilter(); search.focus(); });
+  document.addEventListener('keydown',function(e){
+    var tag=document.activeElement&&document.activeElement.tagName;
+    if(e.key==='/'&&tag!=='INPUT'&&tag!=='TEXTAREA'){ e.preventDefault(); search.focus(); }
+    else if(e.key==='Escape'&&document.activeElement===search){ search.value=''; applyFilter(); }
+  });
+  [].slice.call(document.querySelectorAll('.ex')).forEach(function(b){
+    b.addEventListener('click',function(){ search.value=b.getAttribute('data-q'); applyFilter(); search.focus(); });
+  });
+}
+sections.forEach(function(sec){
+  var head=sec.querySelector('.ph');
+  head.addEventListener('click',function(){ sec.classList.toggle('collapsed'); });
+  head.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sec.classList.toggle('collapsed'); } });
+});
+function setTheme(t){
+  document.body.setAttribute('data-theme',t);
+  themeBtn.textContent=t==='dark'?'Light mode':'Dark mode';
+  try{ localStorage.setItem('kl-theme',t); }catch(e){}
+}
+var savedTheme='light';
+try{ savedTheme=localStorage.getItem('kl-theme')||'light'; }catch(e){}
+setTheme(savedTheme);
+themeBtn.addEventListener('click',function(){
+  setTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark');
+});
+})();
+</script>
+</body>
+</html>
