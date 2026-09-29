@@ -78,10 +78,16 @@ header .sub{font-size:13px; color:var(--text-secondary); margin:0; max-width:64c
 }
 .theme-btn:hover{color:var(--text-primary); border-color:var(--text-muted); box-shadow:0 2px 10px var(--shadow);}
 .gen-date{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-muted);}
-.menuBtn{display:none; position:absolute; top:14px; left:14px;
-  border:1px solid var(--gridline); background:var(--surface-1); color:var(--text-secondary);
-  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
-  padding:7px 12px; border-radius:100px;}
+.menuBtn{
+  display:none;
+  border:1px solid var(--gridline);
+  background:var(--surface-1);
+  width:34px; height:34px; border-radius:10px;
+  align-items:center; justify-content:center;
+  color:var(--text-secondary);
+  z-index:6;
+}
+.menuBtn:hover{color:var(--text-primary); border-color:var(--text-muted);}
 
 /* ---------- search row ---------- */
 .search-row{
@@ -225,8 +231,8 @@ html:not(.js) .menuBtn{display:none;}
 
 /* ---------- mobile ---------- */
 @media (max-width:900px){
-  .menuBtn{display:inline-flex;}
-  .head-inner{padding:52px 16px 14px;}
+  .menuBtn{display:inline-flex !important; position:absolute; top:14px; left:14px;}
+  .head-inner{padding:58px 16px 14px;}
   .head-row{flex-direction:column; gap:12px;}
   header h1{font-size:26px;}
   .side{flex-direction:row; justify-content:space-between; align-items:center; width:100%;}
@@ -248,7 +254,9 @@ html:not(.js) .menuBtn{display:none;}
 <div class="shell">
   <header class="top">
     <div class="head-inner">
-      <button type="button" class="menuBtn" id="menuBtn">Sections</button>
+      <button type="button" class="menuBtn" id="menuBtn" aria-label="Open sections index" title="Open index">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
       <a class="back-link" href="/Projects/">&larr; Project Dashboard</a>
       <div class="head-row">
         <div class="head-main">
